@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://manasik-ihya.pages.dev/sitemap-index.xml
+Sitemap: https://umrah.ngopikir.com/sitemap-index.xml

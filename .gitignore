@@ -13,5 +13,9 @@ pnpm-debug.log*
 .env
 .env.production
 
+# deployment lokal (sertifikat & ACME)
+acme/
+certbot/
+
 # macOS
 .DS_Store
