@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import DuaBlock from '../components/DuaBlock.astro'
+import { getDuas } from '../lib/content'
+import { splitPassages } from '../lib/text'
+
+const duas = await getDuas()
+
+const weight = (value: string) => value.replace(/\s+/g, '').length
+
+// Perkirakan tinggi blok: teks Arab + terjemah, dan jumlah bagian.
+const lengthFor = (arabic: string, translation: string) => {
+  const parts = splitPassages(arabic).length
+  const score = weight(arabic) + Math.round(weight(translation) * 0.5)
+  if (score > 1000) return 'long'
+  if (score > 620 || parts > 1) return 'mid'
+  return 'short'
+}
+---
+
+<BaseLayout
+  title="Mode baca"
+  description="Baca doa umrah satu per satu dengan teks besar, tanpa gangguan."
+  noindex
+  bare
+>
+  <div class="reader" data-reader>
+    <h1 class="sr-only">Mode baca</h1>
+    <div class="reader__bar">
+      <a class="btn btn--quiet" href="/" data-reader-close aria-label="Tutup mode baca">
+        <span aria-hidden="true">&larr;</span>
+        <span class="reader__close-text">Tutup</span>
+      </a>
+      <span class="reader__count" data-reader-count>1 / {duas.length}</span>
+      <span class="reader__spacer" aria-hidden="true"></span>
+      <button class="wake-toggle" type="button" data-size-cycle title="Ukuran teks">Aa</button>
+      <button class="wake-toggle" type="button" data-wake aria-pressed="false" title="Layar tetap menyala">
+        Layar
+      </button>
+      <button class="theme-toggle" data-theme-toggle type="button" aria-label="Ubah mode gelap" title="Ubah mode gelap">
+        <svg
+          class="icon-sun"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+          ></path>
+        </svg>
+        <svg
+          class="icon-moon"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          aria-hidden="true"
+        >
+          <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11Z"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="reader__progress" aria-hidden="true">
+      <span data-reader-progress></span>
+    </div>
+
+    <div class="reader__body">
+      {
+        duas.map((dua, i) => (
+          <div
+            class="reader__slide"
+            data-slide
+            data-dua={dua.id}
+            data-stage={dua.stageSlug}
+            data-stage-label={`${String(dua.stageOrder).padStart(2, '0')} · ${dua.stageShort}`}
+            data-length={lengthFor(dua.data.arabic, dua.data.translation)}
+            hidden={i !== 0}
+          >
+            <DuaBlock dua={dua} showStage linkToStage headingLevel="h2" />
+          </div>
+        ))
+      }
+    </div>
+
+    <p class="reader__hint">
+      Geser ke samping untuk berpindah · gulir untuk terjemah · <kbd>Esc</kbd> keluar
+    </p>
+
+    <div class="reader__nav">
+      <button type="button" data-reader-prev>Sebelumnya</button>
+      <button type="button" data-reader-next>Berikutnya</button>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  import '../scripts/reader'
+</script>

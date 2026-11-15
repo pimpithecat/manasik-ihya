@@ -1,0 +1,70 @@
+---
+interface Props {
+  name: 'tawaf' | 'sai'
+  unit: string
+  total?: number
+  pair?: string
+  label: string
+}
+
+const { name, unit, total = 7, pair, label } = Astro.props
+---
+
+<section
+  class="counter"
+  data-counter={name}
+  data-total={String(total)}
+  data-unit={unit}
+  data-name={label}
+  data-pair={pair}
+>
+  <div data-counter-body>
+    <div class="counter__top">
+      <p class="counter__round">
+        <span data-unit-label>{unit}</span>{' '}
+        <b data-round>1</b> dari <b>{total}</b>
+      </p>
+      <p class="counter__direction" data-direction></p>
+    </div>
+
+    <div class="counter__dots" aria-hidden="true">
+      {Array.from({ length: total }).map((_, index) => (
+        <span class="dot" data-dot={index} data-state={index === 0 ? 'active' : 'idle'} />
+      ))}
+    </div>
+
+    <p class="sr-only" aria-live="polite" data-counter-status></p>
+
+    <p class="counter__restore notice" data-restore hidden>
+      Melanjutkan hitungan yang tersimpan.
+    </p>
+
+    <div class="counter__panel">
+      <div class="counter__panel-head">
+        <p class="counter__label" data-stop-label></p>
+        <div class="counter__stopnav">
+          <button class="btn btn--quiet" type="button" data-stop-prev aria-label="Posisi sebelumnya">
+            <span aria-hidden="true">&larr;</span>
+          </button>
+          <button class="btn btn--quiet" type="button" data-stop-next aria-label="Posisi berikutnya">
+            <span aria-hidden="true">&rarr;</span>
+          </button>
+        </div>
+      </div>
+
+      <slot />
+    </div>
+
+    <div class="counter__actions">
+      <button class="btn btn--primary" type="button" data-round-done>{unit} selesai</button>
+      <button class="btn btn--quiet" type="button" data-reset>Mulai baru</button>
+    </div>
+  </div>
+
+  <div class="counter__complete" data-complete hidden>
+    <slot name="complete" />
+    <div class="actions" style="margin-top:1.5rem">
+      <button class="btn btn--ghost" type="button" data-reset>Mulai dari awal</button>
+    </div>
+  </div>
+</section>

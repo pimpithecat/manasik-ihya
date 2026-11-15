@@ -1,0 +1,162 @@
+---
+import { render } from 'astro:content'
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import DuaBlock from '../../components/DuaBlock.astro'
+import StageRail from '../../components/StageRail.astro'
+import SizeControl from '../../components/SizeControl.astro'
+import {
+  getDuasByStage,
+  getStages,
+  stageHref,
+  stageSlugFromId,
+  type Stage,
+} from '../../lib/content'
+
+export async function getStaticPaths() {
+  const stages = await getStages()
+  return stages.map((stage) => ({
+    params: { slug: stageSlugFromId(stage.id) },
+    props: { stage },
+  }))
+}
+
+interface Props {
+  stage: Stage
+}
+
+const { stage } = Astro.props
+const slug = stageSlugFromId(stage.id)
+const stages = await getStages()
+const { Content } = await render(stage)
+
+const byStage = await getDuasByStage()
+const duas = byStage.get(slug) ?? []
+
+const index = stages.findIndex((item) => item.id === stage.id)
+const prev = index > 0 ? stages[index - 1] : null
+const next = index < stages.length - 1 ? stages[index + 1] : null
+---
+
+<BaseLayout
+  title={`Tahap ${stage.data.order}: ${stage.data.title}`}
+  description={stage.data.summary}
+  ogType="article"
+>
+  <div class="container container--reading" data-stage-slug={slug}>
+    <header class="page-head">
+      <p class="label">
+        Tahap {String(stage.data.order).padStart(2, '0')} · {duas.length} doa · {stage.data.place}
+      </p>
+      <h1 class="page-title">{stage.data.title}</h1>
+      <p class="page-desc">{stage.data.summary}</p>
+    </header>
+
+    <StageRail stages={stages} current={slug} />
+
+    <div class="toolbar">
+      <SizeControl />
+      <a class="link" href={`/baca/?tahap=${slug}`}>Baca satu per satu</a>
+    </div>
+
+    <div class="prose" style="margin-top:2.25rem">
+      <Content />
+    </div>
+
+    {
+      duas.length > 0 && (
+        <section class="section" aria-labelledby="doa">
+          <div class="section-head">
+            <h2 id="doa">Doa dan bacaan</h2>
+            <p class="label label--small">{duas.length} doa</p>
+          </div>
+          <div class="dua-list">
+            {duas.map((dua) => (
+              <DuaBlock dua={dua} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    {
+      stage.data.note && (
+        <aside class="stage-note" aria-labelledby="catatan-kondisi">
+          <p class="label label--small" id="catatan-kondisi">
+            Catatan kondisi
+          </p>
+          <p>{stage.data.note}</p>
+        </aside>
+      )
+    }
+
+    <div class="actions" style="margin-top:2.5rem">
+      <button class="btn btn--ghost" type="button" data-mark-done aria-pressed="false">
+        Tandai tahap selesai
+      </button>
+      <a class="btn btn--quiet" href={`/cetak/${slug}/`}>Cetak tahap ini</a>
+    </div>
+
+    <nav class="stage-nav" aria-label="Tahap sebelumnya dan berikutnya">
+      {
+        prev ? (
+          <a href={stageHref(stageSlugFromId(prev.id))}>
+            <span class="stage-nav__dir">Sebelumnya</span>
+            <span class="stage-nav__title">{prev.data.title}</span>
+          </a>
+        ) : (
+          <span />
+        )
+      }
+      {
+        next ? (
+          <a href={stageHref(stageSlugFromId(next.id))} style="text-align:right">
+            <span class="stage-nav__dir">Berikutnya</span>
+            <span class="stage-nav__title">{next.data.title}</span>
+          </a>
+        ) : (
+          <span />
+        )
+      }
+    </nav>
+
+    <p class="footnote">
+      <strong>Catatan.</strong> Panduan bacaan, bukan fatwa. Lafaz dan urutan mengikuti <em>Ihya' 'Ulum
+      al-Din</em>; ikuti bimbingan mutawwif di lapangan.
+    </p>
+  </div>
+</BaseLayout>
+
+<script>
+  import { isDone, markDone, setLast, unmarkDone } from '../../scripts/progress'
+
+  const wrap = document.querySelector<HTMLElement>('[data-stage-slug]')
+  const slug = wrap?.dataset.stageSlug
+  if (slug) setLast(slug)
+
+  const button = document.querySelector<HTMLButtonElement>('[data-mark-done]')
+  if (button && slug) {
+    const paint = (done: boolean) => {
+      button.setAttribute('aria-pressed', String(done))
+      button.textContent = done ? 'Tahap selesai \u2713' : 'Tandai tahap selesai'
+    }
+
+    paint(isDone(slug))
+
+    button.addEventListener('click', () => {
+      const done = button.getAttribute('aria-pressed') === 'true'
+      if (done) unmarkDone(slug)
+      else markDone(slug)
+      paint(!done)
+      const region = document.getElementById('pengumuman')
+      if (region) {
+        region.textContent = done ? 'Tahap ditandai belum selesai.' : 'Tahap ditandai selesai.'
+      }
+    })
+  }
+</script>
+
+<style>
+  .dua-list {
+    margin-top: 1.5rem;
+  }
+</style>

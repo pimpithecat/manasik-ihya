@@ -1,0 +1,122 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { getDuas, getStages, stageHref } from '../lib/content'
+import { stageSlugFromId } from '../lib/content'
+
+const stages = await getStages()
+const duas = await getDuas()
+
+const countByStage = new Map<string, number>()
+for (const dua of duas) {
+  countByStage.set(dua.stageSlug, (countByStage.get(dua.stageSlug) ?? 0) + 1)
+}
+
+const quick = [
+  { id: 'ihram-niat', label: 'Niat ihram' },
+  { id: 'ihram-talbiyah', label: 'Talbiyah' },
+  { id: 'makkah-kaabah', label: 'Melihat Ka’bah' },
+  { id: 'tawaf-hajar-aswad', label: 'Tawaf' },
+  { id: 'sai-shafa', label: "Sa'i" },
+  { id: 'wada-multazam', label: "Tawaf wada'" },
+]
+---
+
+<BaseLayout
+  title="Manasik Ihya' — bacaan umrah dari Ihya' 'Ulum al-Din"
+  suffix={false}
+  description="Tata cara umrah, adab, dan doa dari keluar rumah hingga kembali, disarikan dari Ihya' 'Ulum al-Din karya Imam al-Ghazali. Bisa dibaca offline."
+>
+  <div class="container">
+    <section class="hero">
+      <p class="label">Ihya' 'Ulum al-Din · Jilid I</p>
+      <h1 class="hero__title">Umrah, langkah demi <em>langkah</em>.</h1>
+      <p class="hero__desc">
+        Tata cara, adab, dan doa dari keluar rumah hingga kembali lagi — sebagaimana dirinci Imam
+        al-Ghazali. Dibaca tenang, tanpa akun, dan tetap tersedia tanpa jaringan.
+      </p>
+
+      <div class="actions">
+        <a class="btn btn--primary" href="/panduan/persiapan/">Mulai dari persiapan</a>
+        <a class="btn btn--ghost" href="/baca/">Mode baca</a>
+        <a class="btn btn--quiet" id="lanjutkan" href="/panduan/persiapan/" data-continue hidden>
+          Lanjutkan: <span data-continue-title>Persiapan</span>
+          <span aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="cepat">
+      <div class="section-head">
+        <h2 id="cepat">Pintu masuk cepat</h2>
+        <p class="label label--small">Langsung ke doa</p>
+      </div>
+      <div class="quick">
+        {quick.map((item) => <a href={`/baca/#dua-${item.id}`}>{item.label}</a>)}
+        <a href="/dua/">Semua doa</a>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="alur">
+      <div class="section-head">
+        <h2 id="alur">Alur perjalanan</h2>
+        <p class="label label--small">{stages.length} tahap · {duas.length} doa</p>
+      </div>
+
+      <ol class="timeline">
+        {
+          stages.map((stage) => {
+            const slug = stageSlugFromId(stage.id)
+            const count = countByStage.get(slug) ?? 0
+            return (
+              <li class="timeline__item" data-stage-item data-stage={slug} data-href={stageHref(slug)} data-title={stage.data.short}>
+                <a class="timeline__link" href={stageHref(slug)}>
+                  <span class="timeline__num">{String(stage.data.order).padStart(2, '0')}</span>
+                  <span>
+                    <span class="timeline__title">{stage.data.title}</span>
+                    <span class="timeline__summary">{stage.data.summary}</span>
+                  </span>
+                  <span class="timeline__meta">
+                    <span>{stage.data.place}</span>
+                    <span aria-hidden="true">·</span>
+                    <span>{count} doa</span>
+                    <span class="timeline__done">· selesai</span>
+                  </span>
+                </a>
+              </li>
+            )
+          })
+        }
+      </ol>
+    </section>
+
+
+    <section class="section" aria-labelledby="pakai">
+      <div class="section-head">
+        <h2 id="pakai">Cara memakai</h2>
+      </div>
+      <div class="prose" style="margin-top:1.25rem">
+        <p>
+          <strong>Tanpa jaringan.</strong> Setelah halaman ini dibuka sekali, seluruh panduan, doa, dan
+          font tersimpan di peramban. Buka kembali kapan saja, termasuk di mataf tanpa sinyal.
+        </p>
+        <p>
+          <strong>Malam hari.</strong> Tombol di kanan atas mengganti mode gelap. Ukuran teks Arab dan
+          terjemah dapat diatur di setiap halaman tahap dan di mode baca.
+        </p>
+        <p>
+          <strong>Satu sumber.</strong> Seluruh doa dirujuk ke jilid dan halaman <em>Ihya'</em>. Halaman <a href="/sumber/">Sumber</a> memuat catatan editorial dan keterbatasan panduan ini.
+        </p>
+      </div>
+    </section>
+
+    <p class="footnote">
+      <strong>Catatan.</strong> Panduan ini disusun sebagai bacaan, bukan fatwa. Perbedaan detail teknis
+      dapat berbeda menurut mazhab dan bimbingan pembimbing umrah. Utamakan arahan mutawwif dan ahli ilmu
+      di lapangan.
+    </p>
+  </div>
+</BaseLayout>
+
+<script>
+  import '../scripts/home'
+</script>

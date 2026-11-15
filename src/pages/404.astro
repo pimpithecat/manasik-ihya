@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+---
+
+<BaseLayout title="Halaman tidak ditemukan" noindex>
+  <div class="container container--reading">
+    <header class="page-head">
+      <p class="label">404</p>
+      <h1 class="page-title">Yang Anda cari tidak ada di sini.</h1>
+      <p class="page-desc">
+        Mungkin tautannya berubah, atau halaman ini memang belum pernah ditulis.
+      </p>
+    </header>
+
+    <div class="actions" style="margin-top:2rem">
+      <a class="btn btn--primary" href="/">Ke beranda</a>
+      <a class="btn btn--ghost" href="/panduan/">Buka panduan</a>
+      <a class="btn btn--quiet" href="/dua/">Cari doa</a>
+    </div>
+  </div>
+</BaseLayout>

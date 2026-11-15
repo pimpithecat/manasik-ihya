@@ -1,0 +1,45 @@
+---
+const year = new Date().getFullYear()
+---
+
+<footer class="site-footer">
+  <a class="wordmark" href="/">Manasik Ihya'</a>
+
+  <nav class="site-footer__links" aria-label="Navigasi kaki">
+    <a href="/panduan/">Panduan</a>
+    <a href="/cetak/">Cetak buku</a>
+    <a href="/sumber/">Sumber</a>
+  </nav>
+
+  <span class="offline-state" data-offline-state data-state="idle" title="Seluruh isi tersimpan setelah halaman dibuka sekali">
+    <span class="offline-state__dot" aria-hidden="true"></span>
+    <span data-offline-text>Menyiapkan offline</span>
+  </span>
+
+  <p class="site-footer__note">
+    Disarikan dari <em>Ihya' 'Ulum al-Din</em> karya Imam al-Ghazali. Ini panduan bacaan, bukan fatwa;
+    ikuti bimbingan mutawwif dan ahli ilmu di lapangan. &copy; {year}
+  </p>
+</footer>
+
+<script>
+  const wrap = document.querySelector<HTMLElement>('[data-offline-state]')
+  const label = wrap?.querySelector<HTMLElement>('[data-offline-text]')
+
+  function paint() {
+    if (!wrap || !label) return
+    if (!navigator.onLine) {
+      wrap.dataset.state = 'offline'
+      label.textContent = 'Mode offline'
+      return
+    }
+    const ready = 'serviceWorker' in navigator && Boolean(navigator.serviceWorker.controller)
+    wrap.dataset.state = ready ? 'ready' : 'idle'
+    label.textContent = ready ? 'Siap offline' : 'Menyiapkan offline'
+  }
+
+  paint()
+  window.addEventListener('online', paint)
+  window.addEventListener('offline', paint)
+  navigator.serviceWorker?.addEventListener('controllerchange', paint)
+</script>

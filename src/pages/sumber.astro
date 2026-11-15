@@ -1,0 +1,128 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { getDuas } from '../lib/content'
+import { sources, sourceLabelLong } from '../data/sources'
+
+const duas = await getDuas()
+const totalDuas = duas.length
+const totalAyat = duas.filter((dua) => dua.data.kind === 'ayat').length
+---
+
+<BaseLayout
+  title="Sumber dan catatan"
+  description="Rujukan jilid dan halaman, catatan editorial, serta keterbatasan panduan umrah ini."
+>
+  <div class="container container--reading">
+    <header class="page-head">
+      <p class="label">{totalDuas} doa · {totalAyat} ayat · 19 rujukan</p>
+      <h1 class="page-title">Sumber dan catatan</h1>
+      <p class="page-desc">
+        Satu kitab, satu urutan. Semua doa dalam panduan ini dirujuk ke jilid dan halaman, dan setiap
+        penyuntingan disebut terbuka.
+      </p>
+    </header>
+
+    <section class="section" aria-labelledby="kitab">
+      <div class="section-head">
+        <h2 id="kitab">Kitab</h2>
+      </div>
+      <div class="prose" style="margin-top:1.25rem">
+        <p>
+          <strong>Ihya' 'Ulum al-Din</strong> karya Imam Abu Hamid Muhammad al-Ghazali (w. 505 H),
+          khususnya <em>Kitab Asrar al-Hajj</em> pada rubu' ibadah. Rangkaian doa dan adab di sini
+          mengikuti urutan yang beliau susun: dari keluar rumah, perjalanan, ihram, memasuki Makkah,
+          tawaf, sa'i, tahallul, tawaf wada', hingga kembali ke rumah.
+        </p>
+        <p>
+          Nomor rujukan mengikuti daftar pada naskah sumber. Nomor halaman dapat berbeda antar cetakan,
+          karena itu judul kitab dan jilid selalu disertakan.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="catatan">
+      <div class="section-head">
+        <h2 id="catatan">Catatan editorial</h2>
+      </div>
+      <div class="prose" style="margin-top:1.25rem">
+        <h3>Doa mendekati Ka'bah</h3>
+        <p>
+          Pada naskah sumber, doa ini terpotong dengan elipsis. Setelah diperiksa pada teks <em>Ihya'</em> I/249, bagian yang “hilang” ternyata bukan lafaz, melainkan keterangan <em>“lalu ia mengangkat kedua tangannya”</em>. Karena itu doa disajikan dalam dua bagian: pujian dan salawat, lalu permohonan panjang sambil mengangkat tangan. Tidak ada lafaz yang ditambahkan.
+        </p>
+
+        <h3>Lafaz haji pada doa melihat Ka'bah</h3>
+        <p>
+          Doa ini memuat <em>“man hajjahu”</em> — “siapa yang berhaji ke sana”. Lafaz dibiarkan apa
+          adanya sesuai teks Ihya' dan tidak diubah menjadi “umrah”. Catatan ringkas mengenai hal ini
+          disertakan pada doa yang bersangkutan.
+        </p>
+
+        <h3>Urutan yang mengikuti kondisi hari ini</h3>
+        <p>
+          Pada tahap 4, doa masuk Masjidil Haram ditempatkan sebelum doa pertama melihat Ka'bah.
+          Dalam Ihya', urutannya sebaliknya karena pada masa itu Ka'bah terlihat dari luar masjid.
+          Di Masjidil Haram sekarang jamaah melewati pintu masjid lebih dahulu; lafaz kedua doa tidak
+          diubah. Catatan kondisi lain — miqat di pesawat, tawaf di lantai atas, tahallul di
+          barbershop, tawaf wada' sebagai amalan terakhir — ada di setiap halaman tahap dan ikut
+          tercetak.
+        </p>
+
+        <h3>Yang tidak ditambahkan</h3>
+        <p>
+          Tidak ada transliterasi latin, tidak ada audio, dan tidak ada doa tambahan di luar naskah.
+          Teks Arab ditampilkan dengan harakat sebagaimana pada sumber. Penerjemahan ke bahasa Indonesia
+          bersifat pemaknaan, bukan pengganti lafaz.
+        </p>
+
+        <h3>Bukan fatwa</h3>
+        <p>
+          Ini panduan bacaan, bukan fatwa. Perbedaan detail teknis — misalnya batas miqat, tata cara
+          bagi perempuan, atau hitungan pada kondisi tertentu — dapat berbeda menurut mazhab dan
+          situasi. Utamakan bimbingan mutawwif dan ahli ilmu di lapangan.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="daftar">
+      <div class="section-head">
+        <h2 id="daftar">Daftar rujukan</h2>
+        <p class="label label--small">19 nomor</p>
+      </div>
+      <ol class="sources">
+        {
+          sources.map((source) => (
+            <li id={`sumber-${source.n}`}>
+              <span class="n">[{source.n}]</span>
+              <span>
+                <span class="work">{sourceLabelLong(source)}</span>
+                {source.note && <span class="loc"> — {source.note}</span>}
+              </span>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <section class="section" aria-labelledby="teknis">
+      <div class="section-head">
+        <h2 id="teknis">Tentang aplikasi</h2>
+      </div>
+      <div class="prose" style="margin-top:1.25rem">
+        <p>
+          Situs statis tanpa akun, tanpa basis data, dan tanpa pelacakan. Progres tahap, ukuran teks,
+          dan pilihan tema hanya disimpan di peramban Anda. Seluruh halaman dan font disimpan untuk
+          dibaca offline setelah kunjungan pertama.
+        </p>
+        <p>
+          Tipografi: Libre Baskerville dan Alegreya Sans untuk teks Latin, Amiri untuk teks Arab.
+          Ketiganya berlisensi SIL Open Font License dan disajikan dari server ini sendiri.
+        </p>
+      </div>
+    </section>
+
+    <p class="footnote">
+      <strong>Koreksi.</strong> Bila menemukan salah lafaz atau salah rujukan, perbaikan sangat
+      dihargai — kesalahan pada teks doa lebih penting diperbaiki daripada kesalahan tata letak.
+    </p>
+  </div>
+</BaseLayout>

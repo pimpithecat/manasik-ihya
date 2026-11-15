@@ -1,0 +1,101 @@
+---
+import { render } from 'astro:content'
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import DuaBlock from '../../components/DuaBlock.astro'
+import { getDuasByStage, getStages, stageSlugFromId } from '../../lib/content'
+import { sources, sourceLabelLong } from '../../data/sources'
+
+const stages = await getStages()
+const byStage = await getDuasByStage()
+
+const docs = await Promise.all(
+  stages.map(async (stage) => {
+    const slug = stageSlugFromId(stage.id)
+    const { Content } = await render(stage)
+    return { stage, slug, Content, duas: byStage.get(slug) ?? [] }
+  })
+)
+
+const totalDuas = docs.reduce((sum, doc) => sum + doc.duas.length, 0)
+---
+
+<BaseLayout title="Cetak buku lengkap" description="Seluruh panduan umrah dalam satu dokumen untuk dicetak." noindex bare>
+  <div class="container container--reading">
+    <div class="actions no-print" style="margin-top:1.5rem">
+      <a class="btn btn--quiet" href="/panduan/">&larr; Kembali</a>
+      <button class="btn btn--ghost" type="button" data-print>Cetak / simpan PDF</button>
+    </div>
+
+    <header class="print-cover">
+      <p class="label">Ihya' 'Ulum al-Din · Jilid I</p>
+      <h1>Manasik Umrah</h1>
+      <p>
+        Tata cara, adab, dan doa dari keluar rumah hingga kembali — {stages.length} tahap, {totalDuas} doa.
+      </p>
+      <p class="print-cover__meta">Kitab Asrar al-Hajj · Imam al-Ghazali</p>
+      <p class="print-cover__note">
+        Lembar ini disusun sebagai panduan bacaan, bukan fatwa. Perbedaan detail teknis dapat berbeda
+        menurut mazhab dan bimbingan pembimbing umrah.
+      </p>
+    </header>
+
+    {
+      docs.map((doc) => {
+        const Content = doc.Content
+        return (
+          <section class="print-stage" aria-labelledby={`cetak-${doc.slug}`}>
+            <header class="print-stage__head">
+              <p class="label">Tahap {String(doc.stage.data.order).padStart(2, '0')} · {doc.stage.data.place}</p>
+              <h2 id={`cetak-${doc.slug}`}>{doc.stage.data.title}</h2>
+            </header>
+            <div class="prose">
+              <Content />
+            </div>
+            {doc.duas.length > 0 && (
+              <div style="margin-top:1.5rem">
+                {doc.duas.map((dua) => (
+                  <DuaBlock dua={dua} />
+                ))}
+              </div>
+            )}
+            {doc.stage.data.note && (
+              <aside class="stage-note">
+                <p class="label label--small">Catatan kondisi</p>
+                <p>{doc.stage.data.note}</p>
+              </aside>
+            )}
+          </section>
+        )
+      })
+    }
+
+    <section class="print-stage" aria-labelledby="cetak-sumber">
+      <header class="print-stage__head">
+        <p class="label">Rujukan</p>
+        <h2 id="cetak-sumber">Daftar sumber</h2>
+      </header>
+      <ol class="sources">
+        {sources.map((source) => (
+          <li>
+            <span class="n">[{source.n}]</span>
+            <span>{sourceLabelLong(source)}</span>
+          </li>
+        ))}
+      </ol>
+      <p class="notice" style="margin-top:1.5rem">
+        Panduan bacaan, bukan fatwa. Ikuti bimbingan mutawwif dan ahli ilmu di lapangan.
+      </p>
+    </section>
+
+    <div class="actions no-print" style="margin-block:2.5rem">
+      <a class="btn btn--quiet" href="/panduan/">&larr; Kembali ke panduan</a>
+      <button class="btn btn--ghost" type="button" data-print>Cetak / simpan PDF</button>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  document.querySelectorAll('[data-print]').forEach((button) => {
+    button.addEventListener('click', () => window.print())
+  })
+</script>

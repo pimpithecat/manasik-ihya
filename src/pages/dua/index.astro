@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import { getDuas, getStages, stageSlugFromId } from '../../lib/content'
+import { searchIndex } from '../../lib/text'
+
+const stages = await getStages()
+const duas = await getDuas()
+
+const groups = stages
+  .map((stage) => {
+    const slug = stageSlugFromId(stage.id)
+    return {
+      slug,
+      title: stage.data.title,
+      order: stage.data.order,
+      duas: duas.filter((dua) => dua.stageSlug === slug),
+    }
+  })
+  .filter((group) => group.duas.length > 0)
+---
+
+<BaseLayout
+  title="Indeks doa"
+  description="Semua doa umrah dalam panduan ini, dapat dicari dengan teks Arab maupun Indonesia."
+>
+  <div class="container">
+    <header class="page-head">
+      <p class="label">{duas.length} doa · {groups.length} tahap</p>
+      <h1 class="page-title">Indeks doa</h1>
+      <p class="page-desc">
+        Cari dengan kata Indonesia atau potongan teks Arab. Harakat diabaikan, sehingga
+        <span class="ar" lang="ar">اللهم</span> menemukan <span class="ar" lang="ar">اللَّهُمَّ</span>.
+      </p>
+    </header>
+
+    <div class="search" data-search data-filled="false" data-empty="false">
+      <div class="search__field">
+        <label class="sr-only" for="cari">Cari doa</label>
+        <input
+          id="cari"
+          type="search"
+          inputmode="search"
+          autocomplete="off"
+          placeholder="mis. ihram, talbiyah, ربنا"
+          data-search-input
+          aria-describedby="cari-status"
+        />
+        <button class="search__clear" type="button" data-search-clear>Hapus</button>
+      </div>
+      <p class="search__status" id="cari-status" aria-live="polite" data-search-status></p>
+
+      <p class="search__empty">
+        Tidak ada doa yang cocok. Coba kata lain, misalnya “tawaf”, “safar”, atau “ربنا”.
+      </p>
+
+      {
+        groups.map((group) => (
+          <section class="search__group" data-group aria-labelledby={`grup-${group.slug}`}>
+            <h2 id={`grup-${group.slug}`}>
+              {String(group.order).padStart(2, '0')} · {group.title}
+            </h2>
+            {group.duas.map((dua) => (
+              <a
+                class="search__result"
+                href={`/baca/#dua-${dua.id}`}
+                data-cari={searchIndex(
+                  dua.data.title,
+                  dua.data.arabic,
+                  dua.data.translation,
+                  dua.stageTitle
+                )}
+              >
+                <span>{dua.data.title}</span>
+                <small>{dua.data.translation}</small>
+              </a>
+            ))}
+          </section>
+        ))
+      }
+    </div>
+
+    <p class="footnote">
+      <strong>Tips.</strong> Tekan <kbd>/</kbd> untuk langsung ke kolom pencarian. Doa dapat dibuka
+      satu per satu di <a href="/baca/">mode baca</a>.
+    </p>
+  </div>
+</BaseLayout>
+
+<script>
+  import '../../scripts/search'
+</script>

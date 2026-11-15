@@ -1,0 +1,45 @@
+---
+interface Props {
+  compact?: boolean
+}
+---
+
+<div class="size-control" role="group" aria-label="Ukuran teks" data-size-control>
+  <span class="size-control__label">Ukuran</span>
+  <button type="button" data-size-set="kecil" aria-pressed="false">Kecil</button>
+  <button type="button" data-size-set="sedang" aria-pressed="true">Sedang</button>
+  <button type="button" data-size-set="besar" aria-pressed="false">Besar</button>
+</div>
+
+<script>
+  const KEY = 'manasik:text-size'
+  const root = document.documentElement
+
+  function current(): string {
+    const value = root.dataset.size
+    return value === 'kecil' || value === 'besar' ? value : 'sedang'
+  }
+
+  function apply(size: string) {
+    if (size === 'kecil' || size === 'besar') {
+      root.dataset.size = size
+    } else {
+      delete root.dataset.size
+    }
+    document.querySelectorAll<HTMLButtonElement>('[data-size-set]').forEach((button) => {
+      button.setAttribute('aria-pressed', String(button.dataset.sizeSet === size))
+    })
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('[data-size-set]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const size = button.dataset.sizeSet ?? 'sedang'
+      apply(size)
+      try {
+        localStorage.setItem(KEY, size)
+      } catch {}
+    })
+  })
+
+  apply(current())
+</script>

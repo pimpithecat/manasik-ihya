@@ -1,0 +1,143 @@
+---
+import type { DuaWithContext } from '../lib/content'
+import { sourceByNumber, sourceLabel, type SourceRef } from '../data/sources'
+import { splitPassages } from '../lib/text'
+
+interface Props {
+  dua: DuaWithContext
+  showStage?: boolean
+  linkToStage?: boolean
+  headingLevel?: 'h2' | 'h3'
+}
+
+const { dua, showStage = false, linkToStage = false, headingLevel = 'h3' } = Astro.props
+const Heading = headingLevel
+const refs = dua.data.source
+  .map((n) => sourceByNumber.get(n))
+  .filter((s): s is SourceRef => Boolean(s))
+
+const arabics = splitPassages(dua.data.arabic)
+const translations = splitPassages(dua.data.translation)
+const parts = arabics.map((arabic, index) => ({
+  arabic,
+  translation: translations[index] ?? '',
+}))
+---
+
+<article class="dua" id={`dua-${dua.id}`} data-stage={dua.data.stage} data-dua={dua.id}>
+  <div class="dua__top">
+    <p class="dua__label">
+      <span class="dua__kind">{dua.data.kind === 'ayat' ? 'Ayat' : 'Doa'}</span>{' '}
+      <span class="dua__num">{String(dua.index).padStart(2, '0')}</span>
+      {showStage && <span> · {dua.stageShort}</span>}
+    </p>
+    {
+      linkToStage && (
+        <a class="dua__anchor" href={`/panduan/${dua.stageSlug}/#dua-${dua.id}`}>
+          Buka di panduan
+        </a>
+      )
+    }
+  </div>
+
+  <Heading class="dua__title">{dua.data.title}</Heading>
+
+  <div class="dua__arabic" lang="ar" dir="rtl" data-copy-arabic>{parts[0]?.arabic}</div>
+  {parts[0]?.translation && (
+    <p class="dua__translation" data-copy-translation>{parts[0].translation}</p>
+  )}
+  {
+    parts.slice(1).map((part) => (
+      <>
+        <div class="dua__arabic" lang="ar" dir="rtl" data-copy-arabic>
+          {part.arabic}
+        </div>
+        {part.translation && (
+          <p class="dua__translation" data-copy-translation>
+            {part.translation}
+          </p>
+        )}
+      </>
+    ))
+  }
+  {dua.data.note && <p class="dua__note">{dua.data.note}</p>}
+
+  <div class="dua__meta">
+    <span class="dua__source">
+      Sumber: {
+        refs.map((source, i) => (
+          <>
+            {i > 0 && ' · '}
+            <a href={`/sumber/#sumber-${source.n}`}>{sourceLabel(source)}</a>
+          </>
+        ))
+      }
+    </span>
+    <button class="btn btn--quiet js-copy" type="button" aria-label={`Salin doa: ${dua.data.title}`}>
+      Salin
+    </button>
+  </div>
+</article>
+
+<script>
+  function announce(message: string) {
+    const region = document.getElementById('pengumuman')
+    if (region) region.textContent = message
+  }
+
+  document.addEventListener('click', async (event) => {
+    const button = (event.target as HTMLElement).closest<HTMLButtonElement>('.js-copy')
+    if (!button) return
+    const dua = button.closest<HTMLElement>('.dua')
+    if (!dua) return
+
+    const arabics = Array.from(dua.querySelectorAll<HTMLElement>('[data-copy-arabic]')).map((el) =>
+      el.innerText.trim()
+    )
+    const translations = Array.from(
+      dua.querySelectorAll<HTMLElement>('[data-copy-translation]')
+    ).map((el) => el.innerText.trim())
+    const stages = dua.querySelector<HTMLElement>('.dua__source')?.innerText.trim() ?? ''
+
+    const body = arabics
+      .map((arabic, index) => (translations[index] ? `${arabic}\n\n${translations[index]}` : arabic))
+      .join('\n\n')
+    const text = `${body}\n\n${stages}`
+
+    const original = button.textContent
+    if (await copyText(text)) {
+      button.textContent = 'Tersalin'
+      announce('Doa disalin ke papan klip.')
+    } else {
+      button.textContent = 'Gagal menyalin'
+      announce('Doa tidak dapat disalin. Salin secara manual.')
+    }
+    window.setTimeout(() => {
+      button.textContent = original
+    }, 2000)
+  })
+
+  async function copyText(text: string): Promise<boolean> {
+    try {
+      await navigator.clipboard.writeText(text)
+      return true
+    } catch {}
+
+    // Peramban dalam aplikasi (WhatsApp, Instagram) sering menolak Clipboard API.
+    try {
+      const area = document.createElement('textarea')
+      area.value = text
+      area.setAttribute('readonly', '')
+      area.style.position = 'fixed'
+      area.style.top = '-1000px'
+      area.style.opacity = '0'
+      document.body.appendChild(area)
+      area.select()
+      const copied = document.execCommand('copy')
+      area.remove()
+      return copied
+    } catch {
+      return false
+    }
+  }
+</script>

@@ -1,0 +1,89 @@
+---
+import { render } from 'astro:content'
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import DuaBlock from '../../components/DuaBlock.astro'
+import {
+  getDuasByStage,
+  getStages,
+  stageSlugFromId,
+  type Stage,
+} from '../../lib/content'
+
+export async function getStaticPaths() {
+  const stages = await getStages()
+  return stages.map((stage) => ({
+    params: { slug: stageSlugFromId(stage.id) },
+    props: { stage },
+  }))
+}
+
+interface Props {
+  stage: Stage
+}
+
+const { stage } = Astro.props
+const slug = stageSlugFromId(stage.id)
+const { Content } = await render(stage)
+const byStage = await getDuasByStage()
+const duas = byStage.get(slug) ?? []
+---
+
+<BaseLayout
+  title={`Cetak: ${stage.data.title}`}
+  description={`Lembar cetak tahap ${stage.data.order}: ${stage.data.title}.`}
+  noindex
+  bare
+>
+  <div class="container container--reading">
+    <div class="actions no-print" style="margin-top:1.5rem">
+      <a class="btn btn--quiet" href={`/panduan/${slug}/`}>&larr; Kembali ke tahap</a>
+      <button class="btn btn--ghost" type="button" data-print>Cetak / simpan PDF</button>
+    </div>
+
+    <header class="print-cover">
+      <p class="label">Manasik Ihya' · Tahap {String(stage.data.order).padStart(2, '0')}</p>
+      <h1>{stage.data.title}</h1>
+      <p>{stage.data.summary}</p>
+    </header>
+
+    <section class="print-stage" style="break-before:auto; padding-top:1.5rem">
+      <div class="prose">
+        <Content />
+      </div>
+
+      {
+        duas.length > 0 && (
+          <div style="margin-top:1.75rem" class="print-duas">
+            <h2 class="print-duas__title" style="font-size:1.45rem; margin-bottom:.5rem">Doa dan bacaan</h2>
+            {duas.map((dua) => (
+              <DuaBlock dua={dua} />
+            ))}
+          </div>
+        )
+      }
+
+      {
+        stage.data.note && (
+          <aside class="stage-note">
+            <p class="label label--small">Catatan kondisi</p>
+            <p>{stage.data.note}</p>
+          </aside>
+        )
+      }
+
+      <p class="notice" style="margin-top:2rem">
+        Disarikan dari <em>Ihya' 'Ulum al-Din</em> jilid I. Panduan bacaan, bukan fatwa.
+      </p>
+    </section>
+
+    <div class="actions no-print" style="margin-block:2.5rem">
+      <a class="btn btn--quiet" href={`/panduan/${slug}/`}>&larr; Kembali ke tahap</a>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  document.querySelectorAll('[data-print]').forEach((button) => {
+    button.addEventListener('click', () => window.print())
+  })
+</script>

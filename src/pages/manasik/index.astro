@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import { getStages, stageSlugFromId } from '../../lib/content'
+
+const stages = await getStages()
+---
+
+<BaseLayout
+  title="Manasik"
+  description="Alat bantu hitungan tawaf dan sa'i, beserta doa pada setiap posisi."
+>
+  <div class="container">
+    <header class="page-head">
+      <p class="label">Alat bantu</p>
+      <h1 class="page-title">Manasik</h1>
+      <p class="page-desc">
+        Dua hitungan yang paling mudah hilang di tengah lautan manusia: tujuh putaran tawaf dan tujuh
+        kali sa'i. Hitungan disimpan di peramban ini, jadi tidak hilang bila layar mati.
+      </p>
+    </header>
+
+    <ul class="index-list">
+      {
+        stages
+          .filter((stage) => ['tawaf', 'sai'].includes(stageSlugFromId(stage.id)))
+          .map((stage) => {
+            const slug = stageSlugFromId(stage.id)
+            return (
+              <li>
+                <a href={`/manasik/${slug}/`}>
+                  <span>
+                    <span class="timeline__title">
+                      {slug === 'tawaf' ? 'Penghitung tawaf' : 'Penghitung sa’i'}
+                    </span>
+                    <span class="timeline__summary">{stage.data.summary}</span>
+                  </span>
+                  <span class="count">7 {slug === 'tawaf' ? 'putaran' : 'kali'}</span>
+                </a>
+              </li>
+            )
+          })
+      }
+    </ul>
+
+    <div class="notice" style="margin-top:2.5rem">
+      <p>
+        Hitungan ini hanya alat bantu mengingat, bukan bagian dari manasik. Letakkan ponsel sejenak
+        ketika urutan sudah dihafal.
+      </p>
+    </div>
+
+    <p class="footnote">
+      <strong>Sebelum mulai.</strong> Pastikan Anda sudah memahami urutan pada <a href="/panduan/tawaf/">tahap tawaf</a> dan <a href="/panduan/sai/">tahap sa’i</a>.
+    </p>
+  </div>
+</BaseLayout>

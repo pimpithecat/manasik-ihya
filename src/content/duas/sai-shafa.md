@@ -1,0 +1,14 @@
+---
+stage: sai
+order: 1
+title: "Di Bukit Shafa"
+kind: dua
+position: shafa
+source: [13]
+arabic: |
+  اللَّهُ أَكْبَرُ اللَّهُ أَكْبَرُ، الْحَمْدُ لِلَّهِ عَلَى مَا هَدَانَا، الْحَمْدُ لِلَّهِ بِمَحَامِدِهِ كُلِّهَا عَلَى جَمِيعِ نِعَمِهِ كُلِّهَا، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ يُحْيِي وَيُمِيتُ بِيَدِهِ الْخَيْرُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ، صَدَقَ وَعْدَهُ، وَنَصَرَ عَبْدَهُ، وَأَعَزَّ جُنْدَهُ، وَهَزَمَ الْأَحْزَابَ وَحْدَهُ، لَا إِلَهَ إِلَّا اللَّهُ مُخْلِصِينَ لَهُ الدِّينَ وَلَوْ كَرِهَ الْكَافِرُونَ، لَا إِلَهَ إِلَّا اللَّهُ مُخْلِصِينَ لَهُ الدِّينَ، الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ، فَسُبْحَانَ اللَّهِ حِينَ تُمْسُونَ وَحِينَ تُصْبِحُونَ وَلَهُ الْحَمْدُ فِي السَّمَوَاتِ وَالْأَرْضِ وَعَشِيًّا وَحِينَ تُظْهِرُونَ يُخْرِجُ الْحَيَّ مِنَ الْمَيِّتِ وَيُخْرِجُ الْمَيِّتَ مِنَ الْحَيِّ وَيُحْيِي الْأَرْضَ بَعْدَ مَوْتِهَا وَكَذَلِكَ تُخْرَجُونَ وَمِنْ آيَاتِهِ أَنْ خَلَقَكُمْ مِنْ تُرَابٍ ثُمَّ إِذَا أَنْتُمْ بَشَرٌ تَنْتَشِرُونَ، اللَّهُمَّ إِنِّي أَسْأَلُكَ إِيمَانًا دَائِمًا وَيَقِينًا صَادِقًا وَعِلْمًا نَافِعًا وَقَلْبًا خَاشِعًا وَلِسَانًا ذَاكِرًا وَأَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ وَالْمُعَافَاةَ الدَّائِمَةَ فِي الدُّنْيَا وَالْآخِرَةِ
+translation: |
+  Allah Mahabesar, Allah Mahabesar. Segala puji bagi Allah atas segala petunjuk-Nya, segala puji bagi Allah dengan segala bentuk pujian atas seluruh kenikmatan-Nya. Tiada Tuhan selain Allah semata tiada sekutu bagi-Nya, milik-Nya kerajaan dan bagi-Nya segala puji, Dia Yang Menghidupkan dan Mematikan, di tangan-Nya segala kebaikan dan Dia Mahakuasa atas segala sesuatu. Tiada Tuhan selain Allah semata, Dia menepati janji-Nya, memenangkan hamba-Nya, memuliakan pasukan-Nya, dan mengalahkan musuh-musuh sendirian. Tiada Tuhan selain Allah dengan memurnikan agama untuk-Nya walau orang-orang kafir membenci. Tiada Tuhan selain Allah, segala puji bagi Allah Tuhan semesta alam. Mahasuci Allah di waktu kamu berada di petang hari dan waktu kamu berada di subuh hari, dan bagi-Nya-lah segala puji di langit dan di bumi dan pada waktu kamu berada pada petang hari dan pada waktu kamu berada di waktu zuhur. Dia mengeluarkan yang hidup dari yang mati dan mengeluarkan yang mati dari yang hidup dan menghidupkan bumi sesudah matinya. Dan seperti itulah kamu akan dikeluarkan. Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan kamu dari tanah, kemudian tiba-tiba kamu (menjadi) manusia yang berkembang biak. Ya Allah, aku memohon kepada-Mu iman yang kekal, keyakinan yang jujur, ilmu yang bermanfaat, hati yang khusyuk, lisan yang senantiasa berdzikir, serta aku memohon ampunan, kesehatan, dan keselamatan abadi di dunia dan akhirat.
+note: |
+  Mendaki Shafa hingga Ka’bah terlihat, menghadap kiblat, lalu bershalawat dan berdoa.
+---

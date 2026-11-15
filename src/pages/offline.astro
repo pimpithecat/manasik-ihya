@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+---
+
+<BaseLayout
+  title="Halaman belum tersimpan"
+  description="Halaman yang Anda minta belum tersedia saat offline."
+  noindex
+>
+  <div class="container container--reading">
+    <header class="page-head">
+      <p class="label">Tanpa jaringan</p>
+      <h1 class="page-title">Halaman ini belum tersimpan.</h1>
+      <p class="page-desc">
+        Sambungan sedang tidak tersedia, dan halaman yang Anda minta belum pernah dibuka di peramban
+        ini. Panduan dan doa yang sudah pernah dibuka tetap bisa diakses.
+      </p>
+    </header>
+
+    <div class="actions" style="margin-top:2rem">
+      <a class="btn btn--primary" href="/">Ke beranda</a>
+      <a class="btn btn--ghost" href="/panduan/">Buka panduan</a>
+      <a class="btn btn--quiet" href="/baca/">Mode baca</a>
+    </div>
+
+    <p class="footnote">
+      Setelah tersambung kembali, buka sekali setiap halaman yang ingin Anda bawa ke Tanah Suci.
+      Semuanya akan tersimpan untuk dibaca tanpa jaringan.
+    </p>
+  </div>
+</BaseLayout>

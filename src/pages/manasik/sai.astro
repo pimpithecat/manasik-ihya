@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import Counter from '../../components/Counter.astro'
+import DuaBlock from '../../components/DuaBlock.astro'
+import { getDuas } from '../../lib/content'
+import { saiStops } from '../../data/sources'
+
+const duas = await getDuas()
+const byId = new Map(duas.map((dua) => [dua.id, dua]))
+const stops = saiStops.map((stop) => ({ ...stop, entry: byId.get(stop.dua)! }))
+---
+
+<BaseLayout
+  title="Penghitung sa’i"
+  description="Tujuh kali antara Shafa dan Marwah, dengan doa di kedua bukit dan di tengah perjalanan."
+>
+  <div class="container container--reading">
+    <header class="page-head">
+      <p class="label">Tujuh kali · mulai dari Shafa</p>
+      <h1 class="page-title">Penghitung sa’i</h1>
+      <p class="page-desc">
+        Shafa ke Marwah dihitung satu kali, Marwah ke Shafa satu kali, dan seterusnya. Tekan “Lap
+        selesai” setiap kali tiba di bukit berikutnya — sa’i berakhir di Marwah pada hitungan ketujuh.
+      </p>
+    </header>
+
+    <Counter name="sai" unit="Lap" total={7} pair="Shafa|Marwah" label="Sa’i">
+      {
+        stops.map((stop, index) => (
+          <div data-panel={index} data-panel-label={stop.label} hidden={index !== 0}>
+            <DuaBlock dua={stop.entry} showStage headingLevel="h2" />
+          </div>
+        ))
+      }
+
+      <Fragment slot="complete">
+        <h2>Sa’i selesai di Marwah.</h2>
+        <p class="page-desc" style="margin-top:.75rem">
+          Lanjut ke tahallul: mencukur atau memendekkan rambut, lalu larangan ihram kembali halal.
+        </p>
+        <div class="actions" style="margin-top:1.5rem">
+          <a class="btn btn--primary" href="/panduan/tahallul/">Buka tahap tahallul</a>
+        </div>
+        <p class="notice" style="margin-top:1.5rem">
+          Hitungan ini alat bantu, bukan bagian dari manasik. Bila ragu, ikuti arahan mutawwif.
+        </p>
+      </Fragment>
+    </Counter>
+
+    <section class="section" aria-labelledby="adab">
+      <div class="section-head">
+        <h2 id="adab">Sebelum memulai</h2>
+      </div>
+      <div class="prose" style="margin-top:1.25rem">
+        <ul>
+          <li>Mendaki Shafa hingga Ka'bah terlihat, lalu menghadap kiblat.</li>
+          <li>Berjalan tenang; laki-laki berlari kecil di antara dua tanda hijau.</li>
+          <li>Doa di Marwah sama dengan doa di Shafa.</li>
+          <li>Putaran ketujuh berakhir di Marwah, bukan di Shafa.</li>
+        </ul>
+      </div>
+    </section>
+
+    <p class="footnote">
+      <strong>Catatan.</strong> Bila hitungan terlewat, gunakan tombol panah untuk menyesuaikan bacaan;
+      hitungan putaran tetap dapat dimulai ulang tanpa kehilangan isi panduan.
+    </p>
+  </div>
+</BaseLayout>
+
+<script>
+  import '../../scripts/counter'
+</script>

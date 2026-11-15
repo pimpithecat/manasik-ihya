@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import { getDuas, getStages, stageHref, stageSlugFromId } from '../../lib/content'
+
+const stages = await getStages()
+const duas = await getDuas()
+
+const countByStage = new Map<string, number>()
+for (const dua of duas) {
+  countByStage.set(dua.stageSlug, (countByStage.get(dua.stageSlug) ?? 0) + 1)
+}
+---
+
+<BaseLayout
+  title="Panduan"
+  description="Sembilan tahap umrah: persiapan, perjalanan, ihram, Makkah, tawaf, sa'i, tahallul, tawaf wada', dan kepulangan."
+>
+  <div class="container">
+    <header class="page-head">
+      <p class="label">Sembilan tahap</p>
+      <h1 class="page-title">Panduan</h1>
+      <p class="page-desc">
+        Urutan perjalanan dari rumah hingga kembali, dengan doa di setiap tahap. Mulai dari mana saja,
+        atau ikuti alurnya dari awal.
+      </p>
+    </header>
+
+    <ol class="timeline" style="margin-top:2rem">
+      {
+        stages.map((stage) => {
+          const slug = stageSlugFromId(stage.id)
+          return (
+            <li class="timeline__item">
+              <a class="timeline__link" href={stageHref(slug)}>
+                <span class="timeline__num">{String(stage.data.order).padStart(2, '0')}</span>
+                <span>
+                  <span class="timeline__title">{stage.data.title}</span>
+                  <span class="timeline__summary">{stage.data.summary}</span>
+                </span>
+                <span class="timeline__meta">
+                  <span>{stage.data.place}</span>
+                  <span aria-hidden="true">·</span>
+                  <span>{countByStage.get(slug) ?? 0} doa</span>
+                </span>
+              </a>
+            </li>
+          )
+        })
+      }
+    </ol>
+
+    <div class="actions" style="margin-top:2rem">
+      <a class="btn btn--ghost" href="/dua/">Indeks semua doa</a>
+      <a class="btn btn--quiet" href="/cetak/">Cetak buku lengkap</a>
+    </div>
+
+    <p class="footnote">
+      <strong>Catatan.</strong> Ringkasan ini mengikuti urutan dan lafaz dalam <em>Ihya' 'Ulum al-Din</em>
+      jilid I. Perbedaan detail teknis dapat berbeda menurut mazhab; utamakan bimbingan mutawwif.
+    </p>
+  </div>
+</BaseLayout>

@@ -1,0 +1,77 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import Counter from '../../components/Counter.astro'
+import DuaBlock from '../../components/DuaBlock.astro'
+import { getDuas } from '../../lib/content'
+import { tawafStops } from '../../data/sources'
+
+const duas = await getDuas()
+const byId = new Map(duas.map((dua) => [dua.id, dua]))
+
+const stops = tawafStops.map((stop) => ({ ...stop, entry: byId.get(stop.dua)! }))
+const multazam = byId.get('tawaf-multazam')!
+const zamzam = byId.get('tawaf-zamzam')!
+---
+
+<BaseLayout
+  title="Penghitung tawaf"
+  description="Tujuh putaran tawaf dengan doa di setiap posisi: Hajar Aswad, pintu Ka'bah, Rukun Iraqi, Mizab, Rukun Syami, Rukun Yamani, dan antara Yamani–Hajar Aswad."
+>
+  <div class="container container--reading">
+    <header class="page-head">
+      <p class="label">Tujuh putaran · Ka’bah di sisi kiri</p>
+      <h1 class="page-title">Penghitung tawaf</h1>
+      <p class="page-desc">
+        Tekan “Putaran selesai” setiap kali genap satu putaran. Doa di bawah dapat ditelusuri sesuai
+        posisi; panah kecil hanya untuk berpindah bacaan, tidak mengubah hitungan.
+      </p>
+    </header>
+
+    <Counter name="tawaf" unit="Putaran" total={7} label="Tawaf">
+      {
+        stops.map((stop, index) => (
+          <div data-panel={index} data-panel-label={stop.label} hidden={index !== 0}>
+            <DuaBlock dua={stop.entry} showStage headingLevel="h2" />
+          </div>
+        ))
+      }
+
+      <Fragment slot="complete">
+        <h2>Tujuh putaran selesai.</h2>
+        <p class="page-desc" style="margin-top:.75rem">
+          Menuju Multazam, lalu salat dua rakaat di belakang Maqam Ibrahim dan minum air zamzam.
+        </p>
+        <div class="dua-list" style="margin-top:1.5rem">
+          <DuaBlock dua={multazam} showStage />
+          <DuaBlock dua={zamzam} showStage />
+        </div>
+        <p class="notice" style="margin-top:1.5rem">
+          Lanjut ke <a href="/manasik/sai/">penghitung sa’i</a>, atau baca <a href="/panduan/tawaf/">tahap tawaf</a> lengkap.
+        </p>
+      </Fragment>
+    </Counter>
+
+    <section class="section" aria-labelledby="adab">
+      <div class="section-head">
+        <h2 id="adab">Sebelum memulai</h2>
+      </div>
+      <div class="prose" style="margin-top:1.25rem">
+        <ul>
+          <li>Talbiyah dihentikan ketika tawaf dimulai.</li>
+          <li>Laki-laki: <em>idhtiba'</em> — membuka bahu kanan — dan <em>ramal</em> pada tiga putaran pertama.</li>
+          <li>Mulai dan akhiri setiap putaran di Hajar Aswad, dengan Ka'bah selalu di sisi kiri.</li>
+          <li>Tidak ada kewajiban menghafal seluruh doa; yang penting menjaga dzikir.</li>
+        </ul>
+      </div>
+    </section>
+
+    <p class="footnote">
+      <strong>Catatan.</strong> Hitungan ini alat bantu, bukan bagian dari manasik. Bila ragu, ikuti
+      arahan mutawwif.
+    </p>
+  </div>
+</BaseLayout>
+
+<script>
+  import '../../scripts/counter'
+</script>

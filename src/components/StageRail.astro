@@ -1,0 +1,44 @@
+---
+import type { Stage } from '../lib/content'
+import { stageSlugFromId } from '../lib/content'
+
+interface Props {
+  stages: Stage[]
+  current?: string
+}
+
+const { stages, current } = Astro.props
+---
+
+<nav class="rail" aria-label="Tahap manasik">
+  {
+    stages.map((stage) => {
+      const slug = stageSlugFromId(stage.id)
+      return (
+        <a
+          href={`/panduan/${slug}/`}
+          aria-current={slug === current ? 'page' : undefined}
+          aria-label={`Tahap ${stage.data.order}: ${stage.data.title}`}
+          title={stage.data.title}
+        >
+          {String(stage.data.order).padStart(2, '0')}
+          <span class="rail__name">{stage.data.short}</span>
+        </a>
+      )
+    })
+  }
+</nav>
+
+<style>
+  .rail__name {
+    display: none;
+    margin-left: 0.35rem;
+    font-size: 0.8125rem;
+    letter-spacing: 0;
+  }
+  @media (min-width: 720px) {
+    .rail__name {
+      display: inline;
+    }
+  }
+</style>

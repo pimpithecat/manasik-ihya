@@ -1,0 +1,123 @@
+---
+import '../styles/theme.css'
+import SiteHeader from '../components/SiteHeader.astro'
+import SiteFooter from '../components/SiteFooter.astro'
+
+interface Props {
+  title: string
+  description?: string
+  suffix?: boolean
+  bare?: boolean
+  bodyClass?: string
+  noindex?: boolean
+  ogType?: string
+}
+
+const {
+  title,
+  description = "Tata cara umrah beserta adab dan doanya, disarikan dari Ihya' 'Ulum al-Din karya Imam al-Ghazali.",
+  suffix = true,
+  bare = false,
+  bodyClass = '',
+  noindex = false,
+  ogType = 'website',
+} = Astro.props
+
+const fullTitle = suffix ? `${title} — Manasik Ihya'` : title
+const site = Astro.site ?? new URL('https://manasik-ihya.pages.dev')
+const canonical = new URL(Astro.url.pathname, site)
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="theme-color" content="#f7f3ea" id="theme-color" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <link
+      rel="preload"
+      href="/fonts/LibreBaskerville-Regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/LibreBaskerville-Italic.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="preload" href="/fonts/AlegreyaSans-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Amiri-Regular.woff2" as="font" type="font/woff2" crossorigin />
+
+    <script is:inline>
+      ;(function () {
+        try {
+          var theme = localStorage.getItem('theme-preference')
+          var dark =
+            theme === 'dark' ||
+            (theme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+          if (dark) {
+            document.documentElement.classList.add('dark')
+            var meta = document.getElementById('theme-color')
+            if (meta) meta.setAttribute('content', '#151412')
+          }
+          var size = localStorage.getItem('manasik:text-size')
+          if (size === 'kecil' || size === 'besar') {
+            document.documentElement.dataset.size = size
+          }
+        } catch (e) {}
+      })()
+    </script>
+    <script is:inline>
+      ;(function () {
+        if (!('serviceWorker' in navigator)) return
+        window.addEventListener('load', function () {
+          navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(function () {})
+        })
+      })()
+    </script>
+  </head>
+  <body class={bodyClass || undefined}>
+    <a class="skip-link" href="#konten">Lewati ke isi</a>
+    {!bare && <SiteHeader />}
+    <main id="konten">
+      <slot />
+    </main>
+    {!bare && <SiteFooter />}
+    <div class="sr-only" role="status" aria-live="polite" id="pengumuman"></div>
+    <slot name="scripts" />
+
+    <script>
+      document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const isDark = document.documentElement.classList.toggle('dark')
+          try {
+            localStorage.setItem('theme-preference', isDark ? 'dark' : 'light')
+          } catch {}
+          document
+            .getElementById('theme-color')
+            ?.setAttribute('content', isDark ? '#151412' : '#f7f3ea')
+        })
+      })
+    </script>
+  </body>
+</html>
