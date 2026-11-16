@@ -55,6 +55,8 @@ lalu penghitung tawaf:
 | `/panduan/[slug]/` | Prosa tahap + doa berurutan + penanda selesai |
 | `/dua/` | Indeks 34 doa dengan pencarian Arab/Indonesia |
 | `/baca/` | Mode baca satu doa per layar (`?tahap=tawaf`, `#dua-...`), toggle terjemah, ukuran teks, wake lock |
+| `/itinerary/` | Itinerary pribadi: timeline hari, checklist, kode tersamarkan |
+| `/itinerary/edit/` | Editor markdown itinerary, impor/ekspor, template, cadangan |
 | `/manasik/` | Pintu masuk penghitung |
 | `/manasik/tawaf/` | Penghitung 7 putaran + doa per posisi |
 | `/manasik/sai/` | Penghitung 7 lap + arah Shafa–Marwah |
@@ -72,6 +74,8 @@ src/
 ├─ content/stages/*.md      prosa 9 tahap
 ├─ content/duas/*.md        34 doa (frontmatter: arabic, translation, source, position)
 ├─ data/sources.ts          19 rujukan + posisi tawaf/sa'i
+├─ lib/itinerary.ts         parser markdown itinerary, hari, waktu, tag, artefak
+├─ scripts/itinerary-*.ts   render timeline, halaman baca, editor
 ├─ lib/content.ts           pengurutan, indeks global, href
 ├─ lib/text.ts              normalisasi Latin/Arab (harakat dibuang) untuk pencarian
 ├─ styles/theme.css         token SocratEx, tipografi Arab, cetak
@@ -149,6 +153,10 @@ disimpan di `localStorage`:
 | `manasik:progress` | array slug tahap yang ditandai selesai |
 | `manasik:last` | slug tahap terakhir yang dibuka |
 | `manasik:tawaf`, `manasik:sai` | `{ round, stop, done }` |
+| `manasik:itinerary` | markdown itinerary pribadi |
+| `manasik:itinerary-updated` | timestamp perubahan terakhir |
+| `manasik:itinerary-backup` | cadangan sebelum hapus/impor |
+| `manasik:mask-codes` | `on` / `off` — samarkan kode pemesanan |
 
 ## PWA dan offline
 
@@ -159,8 +167,9 @@ Dua pengaturan penting di `astro.config.mjs`:
 
 - `experimental.directoryAndTrailingSlashHandler: true` — agar entri precache
   cocok dengan format direktori Astro (`/baca/` ↔ `baca/index.html`).
-- `ignoreURLParametersMatching: [/^tahap$/]` — agar `/baca/?tahap=tawaf` tetap
-  dilayani dari cache, bukan jatuh ke halaman offline.
+- `ignoreURLParametersMatching: [/^tahap$/, /^mode$/]` — agar
+  `/baca/?tahap=tawaf` dan `/itinerary/edit/?mode=template` tetap dilayani dari
+  cache, bukan jatuh ke halaman offline.
 - `globIgnores: ['icons/**', '404.html']` — `404.html` **tidak** boleh masuk
   precache. Build memetakannya menjadi `/404`, dan nginx mengembalikan status 404
   untuk alamat itu; satu respons gagal membatalkan seluruh instalasi service worker.
@@ -180,6 +189,49 @@ rsvg-convert -w 192 -h 192 public/icons/icon.svg -o public/icons/icon-192.png
 rsvg-convert -w 512 -h 512 public/icons/maskable.svg -o public/icons/maskable-512.png
 ```
 
+
+## Itinerary pribadi
+
+`/itinerary` adalah notebook lokal untuk rencana perjalanan. Tidak ada akun,
+backend, atau data yang dikirim ke server; isinya disimpan di `localStorage`
+peramban. Halaman bertanda `noindex` dan tidak masuk sitemap.
+
+Format markdown:
+
+```md
+---
+nama: Perjalanan Umrah
+mulai: 2026-11-17
+selesai: 2026-11-28
+zona: WITA · WIB · AST
+---
+
+## Hari 1 — Selasa, 17 November 2026
+- **10:30 WITA** — Berangkat dari rumah.
+- **14:00 WIB** — Penerbangan ke Jakarta, kursi `08K`.
+- [ ] Paspor
+- [ ] Visa
+
+## Hari 5 — Sabtu, 21 November 2026
+- **11:15 AST** — Mandi ihram. #ihram
+- **22:00 AST** — Tawaf, sa'i, tahallul. #tawaf #sai #tahallul
+```
+
+- Parser menerima `10:30`, `10.30`, rentang `10:30–10:45`, zona opsional, dan
+  judul `Hari 1` / `Hari ke-1` / `Day 1`.
+- `#ihram`, `#tawaf`, `#sai`, `#tahallul`, `#wada` menjadi tautan ke panduan.
+- `- [ ]` bisa dicentang dan menulis balik ke markdown.
+- `` `kode` `` disamarkan di halaman baca; ketuk untuk melihat, tombol
+  **Salin** menyalin kode asli.
+- Tanggal `mulai`/`selesai` menandai **Hari ini**.
+- Editor menyediakan impor/ekspor `.md`, template fiktif, dan **Rapikan
+  artefak** (NBSP, zero-width, `** 10:30 **`, sisa LaTeX).
+- Sebelum hapus/impor/template/rapikan, versi sebelumnya disimpan di
+  `manasik:itinerary-backup`; tersedia **Urungkan** dan **Pulihkan cadangan**.
+- `marked` hanya dimuat di rute itinerary; halaman lain tetap ringan.
+
+Jangan menaruh itinerary pribadi (PNR, booking ID, nama) di repo publik.
+
 ## Domain dan SEO
 
 `site` di `astro.config.mjs` memakai `SITE_URL` bila ada, dengan cadangan
@@ -195,8 +247,9 @@ Yang sudah disiapkan:
   berukuran 1200×630.
 - JSON-LD: `WebSite` di beranda, `WebPage` + `BreadcrumbList` di halaman tahap,
   `BreadcrumbList` di halaman indeks. Breadcrumb juga tampil di halaman.
-- Sitemap hanya memuat 16 halaman yang boleh diindeks; `/baca`, `/cetak`,
-  `/offline`, dan `/404` bertanda `noindex` dan tidak masuk sitemap.
+- Sitemap hanya memuat halaman yang boleh diindeks; `/baca`, `/cetak`,
+  `/offline`, `/404`, dan `/itinerary` bertanda `noindex` dan tidak masuk
+  sitemap.
 - `robots.txt` dibuat dari `SITE_URL` (bukan berkas statis), jadi URL sitemap
   selalu ikut domain build.
 

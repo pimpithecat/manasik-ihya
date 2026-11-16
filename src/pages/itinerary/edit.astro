@@ -1,0 +1,113 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+---
+
+<BaseLayout
+  title="Sunting itinerary"
+  description="Editor markdown untuk itinerary perjalanan pribadi."
+  noindex
+>
+  <div class="container container--wide" data-editor>
+    <header class="page-head">
+      <p class="label">Itinerary · editor</p>
+      <h1 class="page-title">Sunting rencana</h1>
+      <p class="page-desc">
+        Tulis atau tempel markdown. Pratinjau di samping memakai tampilan yang sama dengan halaman
+        baca. Semua tersimpan di peramban ini.
+      </p>
+    </header>
+
+    <div class="itinerary-editor">
+      <section class="itinerary-pane" aria-label="Editor markdown">
+        <div class="itinerary-tools" role="toolbar" aria-label="Sisipkan format">
+          <button type="button" class="editor-tool" data-insert="bold">Tebal</button>
+          <button type="button" class="editor-tool" data-insert="heading">Hari</button>
+          <button type="button" class="editor-tool" data-insert="list">List</button>
+          <button type="button" class="editor-tool" data-insert="check">Checklist</button>
+          <button type="button" class="editor-tool" data-insert="code">Kode</button>
+          <button type="button" class="editor-tool" data-insert="link">Tautan</button>
+          <button type="button" class="editor-tool" data-insert="tag">Tag</button>
+        </div>
+
+        <label class="sr-only" for="itinerary-input">Markdown itinerary</label>
+        <textarea
+          id="itinerary-input"
+          class="itinerary-input"
+          data-input
+          spellcheck="false"
+          autocomplete="off"
+          autocapitalize="off"
+          placeholder={`---\nnama: Perjalanan Umrah\nmulai: 2026-11-17\nselesai: 2026-11-28\nzona: WITA · WIB · AST\n---\n\n## Hari 1 — Selasa, 17 November 2026\n- **10:30 WITA** — Berangkat dari rumah menuju bandara.\n- [ ] Paspor`}
+        ></textarea>
+        <p class="itinerary-status" data-status>Belum ada rencana</p>
+      </section>
+
+      <section class="itinerary-preview" aria-label="Pratinjau itinerary">
+        <p class="label">Pratinjau</p>
+        <div class="itinerary-preview__body" data-preview></div>
+        <p class="itinerary-preview__empty" data-preview-empty>Belum ada isi.</p>
+      </section>
+    </div>
+
+    <div class="actions itinerary-editor__actions">
+      <a class="btn btn--ghost" href="/itinerary/">Lihat</a>
+      <button class="btn btn--quiet" type="button" data-import>Impor .md</button>
+      <button class="btn btn--quiet" type="button" data-export>Ekspor .md</button>
+      <button class="btn btn--quiet" type="button" data-copy>Salin</button>
+      <button class="btn btn--quiet" type="button" data-template>Template</button>
+      <button class="btn btn--quiet" type="button" data-clean>Rapikan artefak</button>
+      <button class="btn btn--quiet" type="button" data-restore hidden>Pulihkan cadangan</button>
+      <button class="btn btn--quiet" type="button" data-delete>Hapus</button>
+      <input
+        type="file"
+        accept=".md,.markdown,.txt,text/markdown,text/plain"
+        data-file
+        hidden
+      />
+    </div>
+
+    <div class="notice itinerary-undo" data-undo hidden>
+      <p data-undo-text>Rencana dihapus.</p>
+      <div class="actions" style="margin-top:.75rem">
+        <button class="btn btn--quiet" type="button" data-undo-action>Urungkan</button>
+        <button class="btn btn--quiet" type="button" data-undo-close>Tutup</button>
+      </div>
+    </div>
+
+    <details class="itinerary-help">
+      <summary>Format markdown</summary>
+      <div class="prose">
+        <p>
+          <strong>Frontmatter</strong> (opsional): <code>nama</code>, <code>mulai</code> (YYYY-MM-DD),
+          <code>selesai</code>, <code>zona</code>. Dipakai untuk judul dan penanda “Hari ini”.
+        </p>
+        <p>
+          <strong>Hari:</strong> <code>## Hari 1 — Selasa, 17 November 2026</code>. Variasi
+          <code>Hari ke-1</code> atau <code>Day 1</code> juga dikenali.
+        </p>
+        <p>
+          <strong>Kegiatan:</strong> <code>- **10:30 WITA** — Berangkat…</code>. Titik dua atau titik
+          (<code>10.30</code>), rentang (<code>10:30–10:45</code>), dan zona waktu boleh dihilangkan.
+        </p>
+        <p>
+          <strong>Checklist:</strong> <code>- [ ] Paspor</code>. <strong>Tag panduan:</strong>
+          <code>#ihram</code>, <code>#tawaf</code>, <code>#sai</code>, <code>#tahallul</code>,
+          <code>#wada</code>.
+        </p>
+        <p>
+          <strong>Kode:</strong> <code>`08K`</code> atau <code>`FEZ8FB`</code> — disamarkan di halaman
+          baca, bisa dibuka dan disalin.
+        </p>
+      </div>
+    </details>
+
+    <p class="footnote">
+      <strong>Privasi.</strong> Rencana disimpan di <code>localStorage</code> peramban ini, tidak
+      dikirim ke server. Ekspor <code>.md</code> untuk cadangan. Jangan menyimpan nomor paspor.
+    </p>
+  </div>
+</BaseLayout>
+
+<script>
+  import '../../scripts/itinerary-editor'
+</script>

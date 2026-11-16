@@ -14,7 +14,9 @@ export default defineConfig({
     sitemap({
       filter: (page) => {
         const { pathname } = new URL(page)
-        return !['/baca', '/cetak', '/offline', '/404'].some((path) => pathname.startsWith(path))
+        return !['/baca', '/cetak', '/offline', '/404', '/itinerary'].some((path) =>
+          pathname.startsWith(path)
+        )
       },
     }),
     AstroPWAIntegration({
@@ -47,7 +49,7 @@ export default defineConfig({
         globPatterns: ['**/*.{html,js,css,woff2,svg,txt}'],
         globIgnores: ['icons/**', '404.html'],
         navigateFallback: '/offline',
-        ignoreURLParametersMatching: [/^tahap$/],
+        ignoreURLParametersMatching: [/^tahap$/, /^mode$/],
         navigateFallbackDenylist: [/^\/icons\//, /^\/fonts\//],
         cleanupOutdatedCaches: true,
         clientsClaim: true,

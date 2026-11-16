@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+---
+
+<BaseLayout
+  title="Itinerary"
+  description="Itinerary perjalanan pribadi: jadwal, checklist, dan kode pemesanan. Disimpan hanya di peramban ini."
+  noindex
+>
+  <script is:inline>
+    try {
+      if (localStorage.getItem('manasik:itinerary')) {
+        document.documentElement.dataset.plan = '1'
+      }
+    } catch (e) {}
+  </script>
+
+  <div class="container container--reading" data-itinerary>
+    <header class="page-head">
+      <p class="label">Rencana perjalanan · pribadi</p>
+      <h1 class="page-title" data-plan-title>Itinerary</h1>
+      <p class="page-desc" data-plan-meta></p>
+
+      <div class="actions itinerary-actions" data-plan-actions hidden>
+        <a class="btn btn--ghost" href="/itinerary/edit/">Sunting</a>
+        <button class="btn btn--quiet" type="button" data-plan-print>Cetak</button>
+        <button class="btn btn--quiet" type="button" data-plan-export>Ekspor .md</button>
+        <label class="itinerary-mask">
+          <input type="checkbox" data-plan-mask checked />
+          <span>Sembunyikan kode</span>
+        </label>
+      </div>
+    </header>
+
+    <div class="itinerary-empty" data-plan-empty>
+      <p class="page-desc">
+        Belum ada rencana perjalanan. Susun itinerary Anda dari markdown — jadwal, checklist,
+        penerbangan, hotel, dan tautan ke panduan. Semua disimpan di peramban ini.
+      </p>
+      <div class="actions" style="margin-top:1.75rem">
+        <a class="btn btn--primary" href="/itinerary/edit/">Susun itinerary</a>
+        <a class="btn btn--ghost" href="/itinerary/edit/?mode=template">Mulai dari template</a>
+      </div>
+      <p class="footnote">
+        Tanpa akun dan tanpa server. Ekspor <code>.md</code> untuk cadangan; menghapus data situs
+        akan menghapus rencana.
+      </p>
+    </div>
+
+    <div class="itinerary-content" data-plan-content hidden>
+      <div class="itinerary-railbar">
+        <nav class="rail" data-plan-rail aria-label="Hari dalam rencana"></nav>
+        <a class="link itinerary-today-link" data-plan-today hidden>Hari ini &darr;</a>
+      </div>
+      <p class="itinerary-loading" data-plan-loading>Memuat rencana…</p>
+      <div data-plan-body></div>
+      <p class="footnote">
+        <strong>Catatan.</strong> Rencana ini tersimpan hanya di peramban ini. Kode pemesanan
+        disamarkan secara default; ekspor berisi kode asli. Itinerary bukan bagian dari panduan
+        manasik.
+      </p>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  import '../../scripts/itinerary-read'
+</script>
