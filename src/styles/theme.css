@@ -100,6 +100,7 @@ html {
   background: var(--paper);
   color: var(--ink);
   scroll-behavior: smooth;
+  overflow-y: scroll;
   scrollbar-gutter: stable;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
@@ -114,17 +115,8 @@ html {
   }
 }
 
-/* Peramban lama tanpa scrollbar-gutter: paksa ruang scrollbar. */
-@supports not (scrollbar-gutter: stable) {
-  html {
-    overflow-y: scroll;
-  }
-  html.reader-page {
-    overflow: hidden;
-  }
-}
-
 html.reader-page {
+  overflow-y: hidden;
   scrollbar-gutter: auto;
 }
 
