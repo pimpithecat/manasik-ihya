@@ -506,6 +506,65 @@ svg {
   background: var(--accent);
 }
 
+.update-notice {
+  position: fixed;
+  left: 50%;
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 60;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.75rem;
+  width: max-content;
+  max-width: min(28rem, calc(100vw - 2rem));
+  padding: 0.375rem 0.5rem 0.375rem 1rem;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+.update-notice[hidden] {
+  display: none;
+}
+.update-notice__reload {
+  min-height: 2.75rem;
+  white-space: nowrap;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--faint);
+}
+.update-notice__reload:hover {
+  color: var(--accent);
+  text-decoration-color: currentColor;
+}
+.update-notice__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 1.25rem;
+  line-height: 1;
+}
+.update-notice__close:hover {
+  color: var(--ink);
+}
+body.reader-page .update-notice {
+  bottom: calc(7.5rem + env(safe-area-inset-bottom));
+}
+@media (max-width: 480px) {
+  .update-notice {
+    width: calc(100vw - 2rem);
+  }
+}
+
 /* ---------- Tombol ---------- */
 .btn {
   display: inline-flex;

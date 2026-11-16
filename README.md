@@ -167,6 +167,10 @@ Dua pengaturan penting di `astro.config.mjs`:
 
 Footer menampilkan tombol “Pasang aplikasi” saat peramban mengirim
 `beforeinstallprompt`, dan petunjuk “Bagikan → Tambah ke Layar Utama” di iOS.
+Saat ada build baru, `UpdateNotice` mendeteksi service worker baru dan
+menampilkan bar “Versi baru tersedia” dengan tombol **Muat ulang**. Pemeriksaan
+juga dilakukan ketika tab kembali aktif, jadi aplikasi yang sudah dipasang
+tidak perlu dibersihkan cache-nya secara manual.
 
 Ikon PWA dibuat dari `public/icons/icon.svg` dan `maskable.svg`:
 

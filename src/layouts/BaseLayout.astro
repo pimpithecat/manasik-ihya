@@ -3,6 +3,7 @@ import type { JsonLd } from '../lib/seo'
 import '../styles/theme.css'
 import SiteHeader from '../components/SiteHeader.astro'
 import SiteFooter from '../components/SiteFooter.astro'
+import UpdateNotice from '../components/UpdateNotice.astro'
 
 interface Props {
   title: string
@@ -121,14 +122,6 @@ const jsonLdItems = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : []
         } catch (e) {}
       })()
     </script>
-    <script is:inline>
-      ;(function () {
-        if (!('serviceWorker' in navigator)) return
-        window.addEventListener('load', function () {
-          navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(function () {})
-        })
-      })()
-    </script>
   </head>
   <body class={bodyClass || undefined}>
     <a class="skip-link" href="#konten">Lewati ke isi</a>
@@ -137,6 +130,7 @@ const jsonLdItems = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : []
       <slot />
     </main>
     {!bare && <SiteFooter />}
+    <UpdateNotice />
     <div class="sr-only" role="status" aria-live="polite" id="pengumuman"></div>
     <slot name="scripts" />
 
