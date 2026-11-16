@@ -106,6 +106,24 @@ html {
   scroll-padding-top: 2rem;
 }
 
+/* Firefox: scrollbar tipis dengan track transparan. */
+@supports (-moz-appearance: none) {
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--rule) transparent;
+  }
+}
+
+/* Peramban lama tanpa scrollbar-gutter: paksa ruang scrollbar. */
+@supports not (scrollbar-gutter: stable) {
+  html {
+    overflow-y: scroll;
+  }
+  html.reader-page {
+    overflow: hidden;
+  }
+}
+
 html.reader-page {
   scrollbar-gutter: auto;
 }
