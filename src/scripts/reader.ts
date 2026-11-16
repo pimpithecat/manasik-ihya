@@ -24,6 +24,36 @@ if (root) {
     return raw.startsWith('dua-') ? raw.slice(4) : raw
   }
 
+  // Posisi terakhir disimpan di peramban: membuka kembali mode baca
+  // melanjutkan dari doa terakhir, bukan dari awal.
+  const READ_KEY = 'manasik:read'
+
+  function readMark(): string | null {
+    try {
+      const raw = localStorage.getItem(READ_KEY)
+      if (!raw) return null
+      const parsed: unknown = JSON.parse(raw)
+      if (typeof parsed === 'string') return parsed // bentuk lama
+      if (!parsed || typeof parsed !== 'object') return null
+      const id = (parsed as { id?: unknown }).id
+      return typeof id === 'string' && id ? id : null
+    } catch {
+      return null
+    }
+  }
+
+  function saveMark(slide: HTMLElement) {
+    const id = slide.dataset.dua
+    if (!id) return
+    try {
+      localStorage.setItem(
+        READ_KEY,
+        JSON.stringify({ id, stage: slide.dataset.stage ?? null, at: Date.now() })
+      )
+    } catch {}
+  }
+
+  // Urutan prioritas: #dua-... di URL (tautan langsung), lalu posisi tersimpan.
   const hash = readHash()
   if (hash) {
     const filtered = order.findIndex((slide) => slide.dataset.dua === hash)
@@ -35,6 +65,12 @@ if (root) {
         order = allSlides
         position = global
       }
+    }
+  } else {
+    const mark = readMark()
+    if (mark) {
+      const index = order.findIndex((slide) => slide.dataset.dua === mark)
+      if (index >= 0) position = index
     }
   }
 
@@ -58,9 +94,11 @@ if (root) {
     const id = active.dataset.dua
     if (id) {
       history.replaceState(null, '', `${location.pathname}${location.search}#dua-${id}`)
+      saveMark(active)
     }
 
     if (body) body.scrollTop = 0
+    root?.removeAttribute('data-reader-loading')
   }
 
   function go(delta: number) {

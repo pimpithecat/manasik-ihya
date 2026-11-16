@@ -25,7 +25,7 @@ const lengthFor = (arabic: string, translation: string) => {
   bare
   bodyClass="reader-page"
 >
-  <div class="reader" data-reader>
+  <div class="reader" data-reader data-reader-loading>
     <h1 class="sr-only">Mode baca</h1>
     <div class="reader__bar">
       <a class="btn btn--quiet" href="/" data-reader-close aria-label="Tutup mode baca">
@@ -125,4 +125,12 @@ const lengthFor = (arabic: string, translation: string) => {
 
 <script>
   import '../scripts/reader'
+</script>
+
+<script is:inline>
+  // Jaring pengaman: bila skrip mode baca gagal dimuat, jangan biarkan layar kosong.
+  setTimeout(function () {
+    var reader = document.querySelector('[data-reader]')
+    if (reader) reader.removeAttribute('data-reader-loading')
+  }, 1500)
 </script>

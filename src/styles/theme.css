@@ -1196,6 +1196,10 @@ body.reader-page {
   overflow: hidden;
   background: var(--paper);
 }
+/* Jangan tampilkan doa pertama sebelum posisi terakhir dipulihkan. */
+.reader[data-reader-loading] .reader__body {
+  visibility: hidden;
+}
 .reader__bar {
   flex: none;
   display: flex;
