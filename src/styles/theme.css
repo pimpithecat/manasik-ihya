@@ -1753,8 +1753,17 @@ html[data-translation='off'] [data-hint-translation] {
 }
 
 /* ---------- Itinerary ---------- */
+html[data-plan='1'] {
+  scroll-padding-top: 0;
+}
 .itinerary-actions {
   align-items: center;
+  row-gap: 0.5rem;
+}
+@media (min-width: 640px) {
+  .itinerary-actions .itinerary-mask {
+    margin-left: auto;
+  }
 }
 .itinerary-mask {
   display: inline-flex;
@@ -1846,7 +1855,7 @@ html[data-plan='1'] [data-plan-empty] {
 }
 .itinerary-day {
   margin-top: 3.5rem;
-  scroll-margin-top: 6.5rem;
+  scroll-margin-top: var(--itinerary-rail-height, 6.5rem);
 }
 .itinerary-day__head {
   display: flex;
@@ -1901,6 +1910,10 @@ html[data-plan='1'] [data-plan-empty] {
 .itinerary-items {
   margin-top: 0.25rem;
 }
+/* Ujung rencana: biarkan garis catatan jadi satu-satunya pembatas. */
+[data-plan-body] > :last-child .itinerary-entry:last-child {
+  border-bottom: 0;
+}
 .itinerary-entry {
   display: grid;
   grid-template-columns: 6.5rem minmax(0, 1fr);
@@ -1910,7 +1923,7 @@ html[data-plan='1'] [data-plan-empty] {
 }
 .itinerary-entry--tracked {
   grid-template-columns: 6.5rem minmax(0, 1fr) 2.75rem;
-  scroll-margin-top: 6.5rem;
+  scroll-margin-top: var(--itinerary-rail-height, 6.5rem);
 }
 .itinerary-entry.is-done .itinerary-entry__time,
 .itinerary-entry.is-done .itinerary-entry__body {
@@ -2238,10 +2251,6 @@ html[data-plan='1'] [data-plan-empty] {
   }
   .itinerary-railbar__links {
     gap: 0.75rem;
-  }
-  .itinerary-day,
-  .itinerary-entry--tracked {
-    scroll-margin-top: 8.5rem;
   }
   .itinerary-day__tools {
     margin-left: 0;

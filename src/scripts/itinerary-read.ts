@@ -25,13 +25,13 @@ function init(root: HTMLElement) {
   const content = root.querySelector<HTMLElement>('[data-plan-content]')
   const body = root.querySelector<HTMLElement>('[data-plan-body]')
   const rail = root.querySelector<HTMLElement>('[data-plan-rail]')
+  const railbar = root.querySelector<HTMLElement>('.itinerary-railbar')
   const todayLink = root.querySelector<HTMLAnchorElement>('[data-plan-today]')
   const progressLine = root.querySelector<HTMLElement>('[data-plan-progress]')
   const resetButton = root.querySelector<HTMLButtonElement>('[data-plan-reset-progress]')
   const loading = root.querySelector<HTMLElement>('[data-plan-loading]')
   const maskInput = root.querySelector<HTMLInputElement>('[data-plan-mask]')
   const printButton = root.querySelector<HTMLButtonElement>('[data-plan-print]')
-  const exportButton = root.querySelector<HTMLButtonElement>('[data-plan-export]')
 
   let raw = readPlan()
   let data: Itinerary = { meta: {}, blocks: [] }
@@ -209,11 +209,27 @@ function init(root: HTMLElement) {
     if (!body) return
     const stats = applyProgress(body, progress)
     paintSummary(stats)
+    measureRail()
+  }
+
+  /** Samakan offset gulir dengan tinggi rail sticky yang sedang tampil. */
+  function measureRail() {
+    if (!railbar) return
+    const height = railbar.getBoundingClientRect().height
+    if (height > 0) {
+      document.documentElement.style.setProperty(
+        '--itinerary-rail-height',
+        `${Math.floor(height * 100) / 100}px`
+      )
+    }
   }
 
   function scrollToCurrent() {
     const run = (target: HTMLElement) => {
-      const scroll = () => requestAnimationFrame(() => target.scrollIntoView({ block: 'start' }))
+      const scroll = () => {
+        measureRail()
+        requestAnimationFrame(() => target.scrollIntoView({ block: 'start', behavior: 'instant' }))
+      }
       const fonts = document.fonts
       if (fonts && fonts.status !== 'loaded') {
         fonts.ready.then(scroll).catch(scroll)
@@ -268,6 +284,7 @@ function init(root: HTMLElement) {
     paintRail(data)
     paintProgress()
     paintNext()
+    measureRail()
     applyCodeMask(body, mask)
   }
 
@@ -277,6 +294,7 @@ function init(root: HTMLElement) {
     writeProgress(progress)
     paintProgress()
     paintNext()
+    measureRail()
     announce(done ? 'Kegiatan ditandai selesai.' : 'Kegiatan ditandai belum selesai.')
   }
 
@@ -294,11 +312,14 @@ function init(root: HTMLElement) {
     writeProgress(progress)
     paintProgress()
     paintNext()
+    measureRail()
     announce(allDone ? 'Status hari dibatalkan.' : 'Semua kegiatan hari ini ditandai selesai.')
   }
 
   render()
   scrollToCurrent()
+
+  window.addEventListener('resize', measureRail, { passive: true })
 
   body?.addEventListener('click', (event) => {
     const target = event.target as HTMLElement
@@ -321,16 +342,11 @@ function init(root: HTMLElement) {
     writeProgress(progress)
     paintProgress()
     paintNext()
+    measureRail()
     announce('Tanda selesai direset.')
   })
 
   printButton?.addEventListener('click', () => window.print())
-
-  exportButton?.addEventListener('click', () => {
-    const name = slug(data.meta.nama ?? 'rencana')
-    const date = data.meta.mulai ?? new Date().toISOString().slice(0, 10)
-    download(`itinerary-${name}-${date}.md`, raw)
-  })
 
   window.addEventListener('storage', (event) => {
     if (event.key !== PLAN_KEY) return
@@ -409,26 +425,4 @@ function formatRange(startValue?: string, endValue?: string): string {
     return `${full(start)} – ${full(end)}`
   }
   return full((start ?? end) as Date)
-}
-
-function slug(value: string): string {
-  return value
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
-    .slice(0, 48) || 'rencana'
-}
-
-function download(filename: string, text: string) {
-  const blob = new Blob([text], { type: 'text/markdown;charset=utf-8' })
-  const url = URL.createObjectURL(blob)
-  const link = document.createElement('a')
-  link.href = url
-  link.download = filename
-  document.body.append(link)
-  link.click()
-  link.remove()
-  URL.revokeObjectURL(url)
 }
