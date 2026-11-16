@@ -27,7 +27,7 @@ const {
 } = Astro.props
 
 const fullTitle = suffix ? `${title} — Manasik Ihya'` : title
-const site = Astro.site ?? new URL('https://manasik-ihya.pages.dev')
+const site = Astro.site ?? new URL('https://umrah.ngopikir.com')
 const canonical = new URL(Astro.url.pathname, site)
 const ogImage = new URL('/og.png', site)
 const ogImageAlt = "Manasik Ihya' — panduan umrah dari Ihya' 'Ulum al-Din"

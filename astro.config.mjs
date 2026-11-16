@@ -2,7 +2,7 @@ import { defineConfig } from 'astro/config'
 import sitemap from '@astrojs/sitemap'
 import { AstroPWAIntegration } from '@vite-pwa/astro'
 
-const site = process.env.SITE_URL ?? 'https://manasik-ihya.pages.dev'
+const site = process.env.SITE_URL ?? 'https://umrah.ngopikir.com'
 
 export default defineConfig({
   site,

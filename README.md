@@ -152,7 +152,7 @@ rsvg-convert -w 512 -h 512 public/icons/maskable.svg -o public/icons/maskable-51
 ## Domain dan SEO
 
 `site` di `astro.config.mjs` memakai `SITE_URL` bila ada, dengan cadangan
-`https://manasik-ihya.pages.dev`. Setel sebelum deploy:
+`https://umrah.ngopikir.com`. Setel sebelum deploy:
 
 ```bash
 SITE_URL=https://domain-anda.id npm run build

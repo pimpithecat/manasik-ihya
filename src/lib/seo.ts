@@ -4,7 +4,7 @@
  */
 export type JsonLd = Record<string, unknown>
 
-const FALLBACK = new URL('https://manasik-ihya.pages.dev')
+const FALLBACK = new URL('https://umrah.ngopikir.com')
 
 export function baseUrl(site: URL | undefined): URL {
   return site ?? FALLBACK
