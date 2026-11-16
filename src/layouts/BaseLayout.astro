@@ -1,4 +1,5 @@
 ---
+import type { JsonLd } from '../lib/seo'
 import '../styles/theme.css'
 import SiteHeader from '../components/SiteHeader.astro'
 import SiteFooter from '../components/SiteFooter.astro'
@@ -11,6 +12,7 @@ interface Props {
   bodyClass?: string
   noindex?: boolean
   ogType?: string
+  jsonLd?: JsonLd | JsonLd[]
 }
 
 const {
@@ -21,11 +23,15 @@ const {
   bodyClass = '',
   noindex = false,
   ogType = 'website',
+  jsonLd,
 } = Astro.props
 
 const fullTitle = suffix ? `${title} — Manasik Ihya'` : title
 const site = Astro.site ?? new URL('https://manasik-ihya.pages.dev')
 const canonical = new URL(Astro.url.pathname, site)
+const ogImage = new URL('/og.png', site)
+const ogImageAlt = "Manasik Ihya' — panduan umrah dari Ihya' 'Ulum al-Din"
+const jsonLdItems = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : []
 ---
 
 <!doctype html>
@@ -43,9 +49,33 @@ const canonical = new URL(Astro.url.pathname, site)
     <meta property="og:description" content={description} />
     <meta property="og:type" content={ogType} />
     <meta property="og:locale" content="id_ID" />
+    <meta property="og:site_name" content="Manasik Ihya'" />
     <meta property="og:url" content={canonical} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogImageAlt} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
+
+    <meta name="application-name" content="Manasik Ihya'" />
+    <meta name="apple-mobile-web-app-title" content="Manasik" />
+    <meta name="author" content="Manasik Ihya'" />
     <meta name="theme-color" content="#f7f3ea" id="theme-color" />
+
+    {
+      jsonLdItems.map((item) => (
+        <script
+          type="application/ld+json"
+          set:html={JSON.stringify(item).replace(/</g, '\\u003c')}
+        />
+      ))
+    }
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />

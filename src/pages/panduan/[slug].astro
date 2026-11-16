@@ -3,7 +3,9 @@ import { render } from 'astro:content'
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import DuaBlock from '../../components/DuaBlock.astro'
 import StageRail from '../../components/StageRail.astro'
+import Breadcrumb from '../../components/Breadcrumb.astro'
 import SizeControl from '../../components/SizeControl.astro'
+import { breadcrumbJsonLd, webPageJsonLd } from '../../lib/seo'
 import {
   getDuasByStage,
   getStages,
@@ -35,15 +37,37 @@ const duas = byStage.get(slug) ?? []
 const index = stages.findIndex((item) => item.id === stage.id)
 const prev = index > 0 ? stages[index - 1] : null
 const next = index < stages.length - 1 ? stages[index + 1] : null
+
+const description = `${stage.data.summary} Lafaz Arab, terjemahan, dan rujukan Ihya' 'Ulum al-Din.`
+const jsonLd = [
+  webPageJsonLd(Astro.site, {
+    name: stage.data.title,
+    description,
+    path: Astro.url.pathname,
+  }),
+  breadcrumbJsonLd(Astro.site, [
+    { name: 'Beranda', path: '/' },
+    { name: 'Panduan', path: '/panduan/' },
+    { name: stage.data.title, path: Astro.url.pathname },
+  ]),
+]
 ---
 
 <BaseLayout
-  title={`Tahap ${stage.data.order}: ${stage.data.title}`}
-  description={stage.data.summary}
+  title={`${stage.data.title} — Doa Umrah`}
+  description={description}
   ogType="article"
+  jsonLd={jsonLd}
 >
   <div class="container container--reading" data-stage-slug={slug}>
     <header class="page-head">
+      <Breadcrumb
+        items={[
+          { name: 'Beranda', href: '/' },
+          { name: 'Panduan', href: '/panduan/' },
+          { name: stage.data.title },
+        ]}
+      />
       <p class="label">
         Tahap {String(stage.data.order).padStart(2, '0')} · {duas.length} doa · {stage.data.place}
       </p>

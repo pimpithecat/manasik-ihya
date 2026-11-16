@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
+import Breadcrumb from '../components/Breadcrumb.astro'
+import { breadcrumbJsonLd } from '../lib/seo'
 import { getDuas } from '../lib/content'
 import { sources, sourceLabelLong } from '../data/sources'
 
@@ -9,11 +11,16 @@ const totalAyat = duas.filter((dua) => dua.data.kind === 'ayat').length
 ---
 
 <BaseLayout
-  title="Sumber dan catatan"
-  description="Rujukan jilid dan halaman, catatan editorial, serta keterbatasan panduan umrah ini."
+  title="Sumber dan Catatan"
+  description="Rujukan jilid dan halaman, catatan editorial, serta keterbatasan panduan umrah ini — termasuk urutan yang mengikuti kondisi hari ini."
+  jsonLd={breadcrumbJsonLd(Astro.site, [
+    { name: 'Beranda', path: '/' },
+    { name: 'Sumber', path: '/sumber/' },
+  ])}
 >
   <div class="container container--reading">
     <header class="page-head">
+      <Breadcrumb items={[{ name: 'Beranda', href: '/' }, { name: 'Sumber' }]} />
       <p class="label">{totalDuas} doa · {totalAyat} ayat · 19 rujukan</p>
       <h1 class="page-title">Sumber dan catatan</h1>
       <p class="page-desc">

@@ -1,10 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
+import { websiteJsonLd } from '../lib/seo'
 import { getDuas, getStages, stageHref } from '../lib/content'
 import { stageSlugFromId } from '../lib/content'
 
 const stages = await getStages()
 const duas = await getDuas()
+const description =
+  "Tata cara umrah, adab, dan doa dari keluar rumah hingga kembali, disarikan dari Ihya' 'Ulum al-Din karya Imam al-Ghazali. Bisa dibaca offline."
 
 const countByStage = new Map<string, number>()
 for (const dua of duas) {
@@ -24,7 +27,8 @@ const quick = [
 <BaseLayout
   title="Manasik Ihya' — bacaan umrah dari Ihya' 'Ulum al-Din"
   suffix={false}
-  description="Tata cara umrah, adab, dan doa dari keluar rumah hingga kembali, disarikan dari Ihya' 'Ulum al-Din karya Imam al-Ghazali. Bisa dibaca offline."
+  description={description}
+  jsonLd={websiteJsonLd(Astro.site, description)}
 >
   <div class="container">
     <section class="hero">

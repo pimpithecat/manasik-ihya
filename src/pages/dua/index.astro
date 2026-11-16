@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro'
+import Breadcrumb from '../../components/Breadcrumb.astro'
+import { breadcrumbJsonLd } from '../../lib/seo'
 import { getDuas, getStages, stageSlugFromId } from '../../lib/content'
 import { searchIndex } from '../../lib/text'
 
@@ -20,11 +22,16 @@ const groups = stages
 ---
 
 <BaseLayout
-  title="Indeks doa"
-  description="Semua doa umrah dalam panduan ini, dapat dicari dengan teks Arab maupun Indonesia."
+  title="Indeks Doa Umrah"
+  description="Indeks 34 doa umrah dengan lafaz Arab dan terjemahan Indonesia. Cari berdasarkan kata atau potongan lafaz; harakat diabaikan."
+  jsonLd={breadcrumbJsonLd(Astro.site, [
+    { name: 'Beranda', path: '/' },
+    { name: 'Doa', path: '/dua/' },
+  ])}
 >
   <div class="container">
     <header class="page-head">
+      <Breadcrumb items={[{ name: 'Beranda', href: '/' }, { name: 'Doa' }]} />
       <p class="label">{duas.length} doa · {groups.length} tahap</p>
       <h1 class="page-title">Indeks doa</h1>
       <p class="page-desc">

@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro'
+import Breadcrumb from '../../components/Breadcrumb.astro'
+import { breadcrumbJsonLd } from '../../lib/seo'
 import { getDuas, getStages, stageHref, stageSlugFromId } from '../../lib/content'
 
 const stages = await getStages()
@@ -12,11 +14,16 @@ for (const dua of duas) {
 ---
 
 <BaseLayout
-  title="Panduan"
+  title="Panduan Umrah: Sembilan Tahap"
   description="Sembilan tahap umrah: persiapan, perjalanan, ihram, Makkah, tawaf, sa'i, tahallul, tawaf wada', dan kepulangan."
+  jsonLd={breadcrumbJsonLd(Astro.site, [
+    { name: 'Beranda', path: '/' },
+    { name: 'Panduan', path: '/panduan/' },
+  ])}
 >
   <div class="container">
     <header class="page-head">
+      <Breadcrumb items={[{ name: 'Beranda', href: '/' }, { name: 'Panduan' }]} />
       <p class="label">Sembilan tahap</p>
       <h1 class="page-title">Panduan</h1>
       <p class="page-desc">

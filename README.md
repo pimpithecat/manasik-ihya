@@ -158,8 +158,21 @@ rsvg-convert -w 512 -h 512 public/icons/maskable.svg -o public/icons/maskable-51
 SITE_URL=https://domain-anda.id npm run build
 ```
 
-Perbarui juga URL sitemap di `public/robots.txt`. Halaman `/cetak`, `/baca`, dan
-`/offline` sengaja tidak masuk sitemap atau `noindex`.
+Yang sudah disiapkan:
+
+- canonical, Open Graph, dan Twitter Card di setiap halaman; gambar `public/og.png`
+  berukuran 1200×630.
+- JSON-LD: `WebSite` di beranda, `WebPage` + `BreadcrumbList` di halaman tahap,
+  `BreadcrumbList` di halaman indeks. Breadcrumb juga tampil di halaman.
+- Sitemap hanya memuat 16 halaman yang boleh diindeks; `/baca`, `/cetak`,
+  `/offline`, dan `/404` bertanda `noindex` dan tidak masuk sitemap.
+- `robots.txt` dibuat dari `SITE_URL` (bukan berkas statis), jadi URL sitemap
+  selalu ikut domain build.
+
+Catatan hosting: konfigurasi ini mengasumsikan situs berada di **akar domain**
+(Cloudflare Pages, Netlify, Vercel, atau custom domain). Bila memakai GitHub Pages
+pada subpath `/<repo>/`, aset absolut (`/fonts`, `/baca`) perlu `base` dan
+penyesuaian `BASE_URL`.
 
 ## Sumber dan etika isi
 

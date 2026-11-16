@@ -1,7 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro'
+import Breadcrumb from '../../components/Breadcrumb.astro'
 import Counter from '../../components/Counter.astro'
 import DuaBlock from '../../components/DuaBlock.astro'
+import { breadcrumbJsonLd } from '../../lib/seo'
 import { getDuas } from '../../lib/content'
 import { saiStops } from '../../data/sources'
 
@@ -11,11 +13,17 @@ const stops = saiStops.map((stop) => ({ ...stop, entry: byId.get(stop.dua)! }))
 ---
 
 <BaseLayout
-  title="Penghitung sa’i"
+  title="Penghitung Sa’i"
   description="Tujuh kali antara Shafa dan Marwah, dengan doa di kedua bukit dan di tengah perjalanan."
+  jsonLd={breadcrumbJsonLd(Astro.site, [
+    { name: 'Beranda', path: '/' },
+    { name: 'Manasik', path: '/manasik/' },
+    { name: 'Penghitung sa’i', path: '/manasik/sai/' },
+  ])}
 >
   <div class="container container--reading">
     <header class="page-head">
+      <Breadcrumb items={[{ name: 'Beranda', href: '/' }, { name: 'Manasik', href: '/manasik/' }, { name: 'Penghitung sa’i' }]} />
       <p class="label">Tujuh kali · mulai dari Shafa</p>
       <h1 class="page-title">Penghitung sa’i</h1>
       <p class="page-desc">

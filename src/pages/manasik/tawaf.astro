@@ -1,7 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro'
+import Breadcrumb from '../../components/Breadcrumb.astro'
 import Counter from '../../components/Counter.astro'
 import DuaBlock from '../../components/DuaBlock.astro'
+import { breadcrumbJsonLd } from '../../lib/seo'
 import { getDuas } from '../../lib/content'
 import { tawafStops } from '../../data/sources'
 
@@ -14,11 +16,17 @@ const zamzam = byId.get('tawaf-zamzam')!
 ---
 
 <BaseLayout
-  title="Penghitung tawaf"
+  title="Penghitung Tawaf"
   description="Tujuh putaran tawaf dengan doa di setiap posisi: Hajar Aswad, pintu Ka'bah, Rukun Iraqi, Mizab, Rukun Syami, Rukun Yamani, dan antara Yamani–Hajar Aswad."
+  jsonLd={breadcrumbJsonLd(Astro.site, [
+    { name: 'Beranda', path: '/' },
+    { name: 'Manasik', path: '/manasik/' },
+    { name: 'Penghitung tawaf', path: '/manasik/tawaf/' },
+  ])}
 >
   <div class="container container--reading">
     <header class="page-head">
+      <Breadcrumb items={[{ name: 'Beranda', href: '/' }, { name: 'Manasik', href: '/manasik/' }, { name: 'Penghitung tawaf' }]} />
       <p class="label">Tujuh putaran · Ka’bah di sisi kiri</p>
       <h1 class="page-title">Penghitung tawaf</h1>
       <p class="page-desc">

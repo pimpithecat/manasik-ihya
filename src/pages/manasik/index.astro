@@ -1,16 +1,23 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro'
+import Breadcrumb from '../../components/Breadcrumb.astro'
+import { breadcrumbJsonLd } from '../../lib/seo'
 import { getStages, stageSlugFromId } from '../../lib/content'
 
 const stages = await getStages()
 ---
 
 <BaseLayout
-  title="Manasik"
-  description="Alat bantu hitungan tawaf dan sa'i, beserta doa pada setiap posisi."
+  title="Manasik: Penghitung Tawaf dan Sa'i"
+  description="Alat bantu menghitung tujuh putaran tawaf dan tujuh kali sa'i, dengan doa pada setiap posisi. Tersimpan di peramban dan dapat dipakai offline."
+  jsonLd={breadcrumbJsonLd(Astro.site, [
+    { name: 'Beranda', path: '/' },
+    { name: 'Manasik', path: '/manasik/' },
+  ])}
 >
   <div class="container">
     <header class="page-head">
+      <Breadcrumb items={[{ name: 'Beranda', href: '/' }, { name: 'Manasik' }]} />
       <p class="label">Alat bantu</p>
       <h1 class="page-title">Manasik</h1>
       <p class="page-desc">

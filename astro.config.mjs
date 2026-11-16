@@ -12,7 +12,10 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      filter: (page) => !page.includes('/offline') && !page.includes('/cetak'),
+      filter: (page) => {
+        const { pathname } = new URL(page)
+        return !['/baca', '/cetak', '/offline', '/404'].some((path) => pathname.startsWith(path))
+      },
     }),
     AstroPWAIntegration({
       registerType: 'autoUpdate',

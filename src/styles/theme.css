@@ -939,6 +939,36 @@ svg {
     padding-top: 3.5rem;
   }
 }
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+.breadcrumb a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  color: var(--muted);
+  text-decoration: none;
+}
+.breadcrumb a:hover {
+  color: var(--accent);
+}
+.breadcrumb [aria-current='page'] {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  color: var(--ink);
+}
+.breadcrumb span[aria-hidden] {
+  color: var(--faint);
+}
+.breadcrumb + .label {
+  margin-top: 0.5rem;
+}
 .page-title {
   margin-top: 0.75rem;
   font-family: var(--font-serif);
