@@ -1,5 +1,6 @@
 import { marked } from 'marked'
 import { copyText } from '../lib/clipboard'
+import { entryKey, type ProgressMap } from '../lib/itinerary-progress'
 import {
   STAGE_LINKS,
   dayRange,
@@ -16,7 +17,13 @@ export interface RenderOptions {
   preview?: boolean
   maskCodes?: boolean
   today?: number | null
+  progress?: ProgressMap
   onToggle?: (line: number, checked: boolean) => void
+}
+
+export interface ProgressStats {
+  done: number
+  total: number
 }
 
 export interface DayInfo {
@@ -136,6 +143,7 @@ export function renderItinerary(root: HTMLElement, raw: string, options: RenderO
     preview = false,
     maskCodes = true,
     today = null,
+    progress = {},
     onToggle,
   } = options
 
@@ -165,8 +173,30 @@ export function renderItinerary(root: HTMLElement, raw: string, options: RenderO
         <h2>${inline(displayTitle(info.title))}</h2>
         ${isToday ? '<span class="tag itinerary-today">Hari ini</span>' : ''}
       `
+
+      const trackable = blockData.items.some((item) => isTrackable(item))
+      if (!preview && interactive && trackable) {
+        const tools = document.createElement('div')
+        tools.className = 'itinerary-day__tools'
+        tools.innerHTML = `
+          <span class="itinerary-day__count" data-day-count></span>
+          <button type="button" class="itinerary-day__toggle" data-day-toggle aria-pressed="false">
+            Tandai kegiatan hari ini
+          </button>
+        `
+        head.append(tools)
+      }
+
       section.append(head)
-      section.append(renderItems(blockData.items, { interactive, preview, onToggle }))
+      section.append(
+        renderItems(blockData.items, {
+          interactive,
+          preview,
+          dayTitle: blockData.title,
+          progress,
+          onToggle,
+        })
+      )
       root.append(section)
       continue
     }
@@ -179,12 +209,21 @@ export function renderItinerary(root: HTMLElement, raw: string, options: RenderO
       head.innerHTML = `<h2>${inline(blockData.title)}</h2>`
       section.append(head)
     }
-    section.append(renderItems(blockData.items, { interactive, preview, onToggle }))
+    section.append(
+      renderItems(blockData.items, {
+        interactive,
+        preview,
+        dayTitle: blockData.title,
+        progress,
+        onToggle,
+      })
+    )
     root.append(section)
   }
 
   sanitize(root)
   if (!preview) decorateCodes(root, maskCodes, interactive)
+  if (!preview && interactive) applyProgress(root, progress)
 
   return data
 }
@@ -199,9 +238,19 @@ function displayTitle(title: string): string {
   return stripped || title
 }
 
+function isTrackable(item: ItineraryItem): boolean {
+  return item.kind === 'entry' && !item.checkbox && Boolean(item.time)
+}
+
 function renderItems(
   items: ItineraryItem[],
-  options: { interactive: boolean; preview: boolean; onToggle?: (line: number, checked: boolean) => void }
+  options: {
+    interactive: boolean
+    preview: boolean
+    dayTitle: string
+    progress: ProgressMap
+    onToggle?: (line: number, checked: boolean) => void
+  }
 ): HTMLElement {
   const list = document.createElement('div')
   list.className = 'itinerary-items'
@@ -228,6 +277,7 @@ function renderItems(
 
     const body = document.createElement('div')
     body.className = 'itinerary-entry__body'
+    body.dataset.entryBody = ''
 
     if (item.checkbox) {
       const label = document.createElement('label')
@@ -263,9 +313,72 @@ function renderItems(
     }
 
     row.append(time, body)
+
+    if (!options.preview && options.interactive && isTrackable(item)) {
+      const key = entryKey(options.dayTitle, item)
+      row.classList.add('itinerary-entry--tracked')
+      row.id = `kegiatan-${key}`
+      row.dataset.progressEntry = ''
+      row.dataset.progressKey = key
+      row.dataset.done = String(Boolean(options.progress[key]))
+
+      const toggle = document.createElement('button')
+      toggle.type = 'button'
+      toggle.className = 'entry-check'
+      toggle.dataset.progressToggle = ''
+      toggle.dataset.progressKey = key
+      toggle.setAttribute('aria-pressed', String(Boolean(options.progress[key])))
+      toggle.setAttribute(
+        'aria-label',
+        options.progress[key] ? 'Tandai belum selesai' : 'Tandai selesai'
+      )
+      toggle.innerHTML = '<span class="entry-check__mark" aria-hidden="true"></span>'
+      row.append(toggle)
+    }
+
     list.append(row)
   }
 
   return list
+}
+
+/** Terapkan status selesai ke DOM dan kembalikan hitungan total. */
+export function applyProgress(root: HTMLElement, progress: ProgressMap): ProgressStats {
+  let done = 0
+  let total = 0
+
+  root.querySelectorAll<HTMLElement>('[data-progress-entry]').forEach((row) => {
+    const key = row.dataset.progressKey ?? ''
+    const isDone = Boolean(progress[key])
+    row.dataset.done = String(isDone)
+    row.classList.toggle('is-done', isDone)
+    const button = row.querySelector<HTMLButtonElement>('[data-progress-toggle]')
+    if (button) {
+      button.setAttribute('aria-pressed', String(isDone))
+      button.setAttribute('aria-label', isDone ? 'Tandai belum selesai' : 'Tandai selesai')
+    }
+    total += 1
+    if (isDone) done += 1
+  })
+
+  root.querySelectorAll<HTMLElement>('.itinerary-day').forEach((section) => {
+    const rows = Array.from(section.querySelectorAll<HTMLElement>('[data-progress-entry]'))
+    const toggle = section.querySelector<HTMLButtonElement>('[data-day-toggle]')
+    if (!rows.length) return
+
+    const dayDone = rows.filter((row) => row.dataset.done === 'true').length
+    const all = dayDone === rows.length
+    section.dataset.done = String(all)
+
+    const count = section.querySelector<HTMLElement>('[data-day-count]')
+    if (count) count.textContent = `${dayDone}/${rows.length} selesai`
+
+    if (toggle) {
+      toggle.setAttribute('aria-pressed', String(all))
+      toggle.textContent = all ? 'Batalkan kegiatan hari ini' : 'Tandai kegiatan hari ini'
+    }
+  })
+
+  return { done, total }
 }
 

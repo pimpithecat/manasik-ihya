@@ -75,6 +75,7 @@ src/
 ├─ content/duas/*.md        34 doa (frontmatter: arabic, translation, source, position)
 ├─ data/sources.ts          19 rujukan + posisi tawaf/sa'i
 ├─ lib/itinerary.ts         parser markdown itinerary, hari, waktu, tag, artefak
+├─ lib/itinerary-progress.ts hash + simpan tanda selesai kegiatan
 ├─ scripts/itinerary-*.ts   render timeline, halaman baca, editor
 ├─ lib/content.ts           pengurutan, indeks global, href
 ├─ lib/text.ts              normalisasi Latin/Arab (harakat dibuang) untuk pencarian
@@ -156,6 +157,7 @@ disimpan di `localStorage`:
 | `manasik:itinerary` | markdown itinerary pribadi |
 | `manasik:itinerary-updated` | timestamp perubahan terakhir |
 | `manasik:itinerary-backup` | cadangan sebelum hapus/impor |
+| `manasik:itinerary-progress` | `{ hash: timestamp }` — kegiatan yang ditandai selesai |
 | `manasik:mask-codes` | `on` / `off` — samarkan kode pemesanan |
 
 ## PWA dan offline
@@ -221,6 +223,21 @@ zona: WITA · WIB · AST
   judul `Hari 1` / `Hari ke-1` / `Day 1`.
 - `#ihram`, `#tawaf`, `#sai`, `#tahallul`, `#wada` menjadi tautan ke panduan.
 - `- [ ]` bisa dicentang dan menulis balik ke markdown.
+- Setiap kegiatan berjam punya tombol centang sendiri di kanan baris. Status
+  disimpan di `manasik:itinerary-progress` dengan kunci hash
+  `judul hari + jam + teks`, jadi markdown tidak berubah. Mengedit teks
+  kegiatan mereset status kegiatan itu saja.
+- Header hari menampilkan `2/5 selesai` dan tombol **Tandai kegiatan hari ini**
+  / **Batalkan kegiatan hari ini**. Ringkasan total dan **Reset progres** ada di
+  rail sticky.
+- Saat halaman dibuka, itinerary otomatis menggulir ke kegiatan pertama yang
+  belum selesai pada hari ini, dengan label **Berikutnya**. Bila semua kegiatan
+  hari ini selesai, halaman berhenti di judul hari dan menampilkan **Selesai**.
+  Auto-scroll dilewati bila URL punya hash, dan tidak dilakukan bila hari ini di
+  luar rentang `mulai`/`selesai`. Karena berbasis progres — bukan jam dinding —
+  perilakunya tetap benar untuk rencana lintas zona WITA/WIB/AST.
+- Rail hari bersifat sticky (latar `--paper`, garis 1px, tanpa shadow) agar nomor
+  hari, ringkasan progres, dan tautan **Berikutnya** tetap terlihat.
 - `` `kode` `` disamarkan di halaman baca; ketuk untuk melihat, tombol
   **Salin** menyalin kode asli.
 - Tanggal `mulai`/`selesai` menandai **Hari ini**.
@@ -228,6 +245,7 @@ zona: WITA · WIB · AST
   artefak** (NBSP, zero-width, `** 10:30 **`, sisa LaTeX).
 - Sebelum hapus/impor/template/rapikan, versi sebelumnya disimpan di
   `manasik:itinerary-backup`; tersedia **Urungkan** dan **Pulihkan cadangan**.
+- Progres selesai tidak ikut ekspor `.md`; ekspor hanya berisi rencana.
 - `marked` hanya dimuat di rute itinerary; halaman lain tetap ringan.
 
 Jangan menaruh itinerary pribadi (PNR, booking ID, nama) di repo publik.

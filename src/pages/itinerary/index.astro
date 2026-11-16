@@ -50,7 +50,15 @@ import BaseLayout from '../../layouts/BaseLayout.astro'
     <div class="itinerary-content" data-plan-content hidden>
       <div class="itinerary-railbar">
         <nav class="rail" data-plan-rail aria-label="Hari dalam rencana"></nav>
-        <a class="link itinerary-today-link" data-plan-today hidden>Hari ini &darr;</a>
+        <div class="itinerary-railbar__meta">
+          <p class="itinerary-progress" data-plan-progress aria-live="polite"></p>
+          <div class="itinerary-railbar__links">
+            <a class="link itinerary-today-link" data-plan-today hidden>Hari ini &darr;</a>
+            <button class="itinerary-reset" type="button" data-plan-reset-progress hidden>
+              Reset progres
+            </button>
+          </div>
+        </div>
       </div>
       <p class="itinerary-loading" data-plan-loading>Memuat rencana…</p>
       <div data-plan-body></div>

@@ -1,5 +1,12 @@
 import { parseDate, parseItinerary, todayDayNumber, type Itinerary } from '../lib/itinerary'
-import { applyCodeMask, dayInfo, renderItinerary } from './itinerary-render'
+import {
+  entryKey,
+  pruneProgress,
+  readProgress,
+  writeProgress,
+  type ProgressMap,
+} from '../lib/itinerary-progress'
+import { applyCodeMask, applyProgress, dayInfo, renderItinerary } from './itinerary-render'
 
 const PLAN_KEY = 'manasik:itinerary'
 const MASK_KEY = 'manasik:mask-codes'
@@ -9,6 +16,8 @@ const root = document.querySelector<HTMLElement>('[data-itinerary]')
 if (root) init(root)
 
 function init(root: HTMLElement) {
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
+
   const title = root.querySelector<HTMLElement>('[data-plan-title]')
   const metaLine = root.querySelector<HTMLElement>('[data-plan-meta]')
   const actions = root.querySelector<HTMLElement>('[data-plan-actions]')
@@ -17,6 +26,8 @@ function init(root: HTMLElement) {
   const body = root.querySelector<HTMLElement>('[data-plan-body]')
   const rail = root.querySelector<HTMLElement>('[data-plan-rail]')
   const todayLink = root.querySelector<HTMLAnchorElement>('[data-plan-today]')
+  const progressLine = root.querySelector<HTMLElement>('[data-plan-progress]')
+  const resetButton = root.querySelector<HTMLButtonElement>('[data-plan-reset-progress]')
   const loading = root.querySelector<HTMLElement>('[data-plan-loading]')
   const maskInput = root.querySelector<HTMLInputElement>('[data-plan-mask]')
   const printButton = root.querySelector<HTMLButtonElement>('[data-plan-print]')
@@ -24,6 +35,7 @@ function init(root: HTMLElement) {
 
   let raw = readPlan()
   let data: Itinerary = { meta: {}, blocks: [] }
+  let progress: ProgressMap = readProgress()
 
   if (!raw) {
     document.documentElement.removeAttribute('data-plan')
@@ -90,25 +102,130 @@ function init(root: HTMLElement) {
     }
 
     rail.hidden = dayIndex === 0
+  }
 
-    const todaySection = body?.querySelector<HTMLElement>('[data-today]')
-    if (todayLink) {
-      if (todaySection) {
-        todayLink.href = `#${todaySection.id}`
+  function paintSummary(stats: { done: number; total: number }) {
+    if (!progressLine) return
+    if (stats.total === 0) {
+      progressLine.textContent = 'Belum ada kegiatan bertanda.'
+      if (resetButton) resetButton.hidden = true
+      return
+    }
+
+    const pieces = [`${stats.done} dari ${stats.total} kegiatan selesai`]
+    const start = data.meta.mulai ? parseDate(data.meta.mulai) : null
+    const end = data.meta.selesai ? parseDate(data.meta.selesai) : null
+    const now = new Date()
+    const day = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+
+    if (start && day < start) {
+      pieces.push(`Rencana dimulai ${shortDate(start)}`)
+    } else if (end && day > end) {
+      pieces.push('Rencana telah selesai')
+    }
+
+    progressLine.textContent = pieces.join(' · ')
+    if (resetButton) resetButton.hidden = stats.done === 0
+  }
+
+  /** Tandai kegiatan pertama yang belum selesai pada hari ini sebagai “Berikutnya”. */
+  function paintNext() {
+    if (!body) return
+    body.querySelectorAll('.itinerary-next').forEach((element) => element.remove())
+    body.querySelectorAll('.is-next').forEach((element) => element.classList.remove('is-next'))
+    body.querySelectorAll<HTMLElement>('[data-complete]').forEach((element) => {
+      delete element.dataset.complete
+    })
+
+    const section = body.querySelector<HTMLElement>('[data-today]')
+    if (!section) {
+      if (todayLink) todayLink.hidden = true
+      return
+    }
+
+    const rows = Array.from(section.querySelectorAll<HTMLElement>('[data-progress-entry]'))
+    if (!rows.length) {
+      if (todayLink) {
+        todayLink.href = `#${section.id}`
         todayLink.hidden = false
+      }
+      return
+    }
+
+    const next = rows.find((row) => row.dataset.done !== 'true')
+    if (next) {
+      next.classList.add('is-next')
+      const label = document.createElement('span')
+      label.className = 'itinerary-next'
+      label.textContent = 'Berikutnya'
+      const target = next.querySelector<HTMLElement>('[data-entry-body]')
+      if (target) target.prepend(label)
+      else next.prepend(label)
+      if (todayLink) {
+        todayLink.href = `#${next.id}`
+        todayLink.hidden = false
+        todayLink.textContent = 'Berikutnya ↓'
+      }
+      return
+    }
+
+    section.dataset.complete = 'true'
+    const label = document.createElement('span')
+    label.className = 'itinerary-next itinerary-next--day'
+    label.textContent = 'Selesai'
+    section.querySelector('.itinerary-day__head')?.append(label)
+    if (todayLink) {
+      todayLink.href = `#${section.id}`
+      todayLink.hidden = false
+      todayLink.textContent = 'Hari ini ↓'
+    }
+  }
+
+  function paintProgress() {
+    if (!body) return
+    const stats = applyProgress(body, progress)
+    paintSummary(stats)
+  }
+
+  function scrollToCurrent() {
+    const run = (target: HTMLElement) => {
+      const scroll = () => requestAnimationFrame(() => target.scrollIntoView({ block: 'start' }))
+      const fonts = document.fonts
+      if (fonts && fonts.status !== 'loaded') {
+        fonts.ready.then(scroll).catch(scroll)
       } else {
-        todayLink.hidden = true
+        scroll()
       }
     }
+
+    if (location.hash) {
+      const anchor = document.getElementById(decodeURIComponent(location.hash.slice(1)))
+      if (anchor) run(anchor)
+      return
+    }
+
+    const target =
+      body?.querySelector<HTMLElement>('.is-next[data-progress-entry]') ??
+      body?.querySelector<HTMLElement>('[data-today]')
+    if (!target) return
+    run(target)
   }
 
   function render() {
     if (!body) return
     const parsed = parseItinerary(raw)
+    const keys = collectKeys(parsed)
+    const pruned = pruneProgress(progress, keys)
+    if (Object.keys(progress).some((key) => !(key in pruned))) {
+      progress = pruned
+      writeProgress(progress)
+    }
+
     data = renderItinerary(body, raw, {
       interactive: true,
       maskCodes: mask,
       today: todayDayNumber(parsed.meta),
+      progress,
       onToggle: (line, checked) => {
         const lines = raw.split('\n')
         if (!lines[line]) return
@@ -125,10 +242,63 @@ function init(root: HTMLElement) {
 
     paintMeta(data)
     paintRail(data)
+    paintProgress()
+    paintNext()
     applyCodeMask(body, mask)
   }
 
+  function setEntryDone(key: string, done: boolean) {
+    if (done) progress[key] = Date.now()
+    else delete progress[key]
+    writeProgress(progress)
+    paintProgress()
+    paintNext()
+    announce(done ? 'Kegiatan ditandai selesai.' : 'Kegiatan ditandai belum selesai.')
+  }
+
+  function toggleDay(section: HTMLElement) {
+    const rows = Array.from(section.querySelectorAll<HTMLElement>('[data-progress-entry]'))
+    if (!rows.length) return
+    const allDone = rows.every((row) => Boolean(progress[row.dataset.progressKey ?? '']))
+    const stamp = Date.now()
+    for (const row of rows) {
+      const key = row.dataset.progressKey
+      if (!key) continue
+      if (allDone) delete progress[key]
+      else progress[key] = stamp
+    }
+    writeProgress(progress)
+    paintProgress()
+    paintNext()
+    announce(allDone ? 'Status hari dibatalkan.' : 'Semua kegiatan hari ini ditandai selesai.')
+  }
+
   render()
+  scrollToCurrent()
+
+  body?.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement
+    const entryToggle = target.closest<HTMLElement>('[data-progress-toggle]')
+    if (entryToggle) {
+      const key = entryToggle.dataset.progressKey
+      if (key) setEntryDone(key, !progress[key])
+      return
+    }
+    const dayToggle = target.closest<HTMLElement>('[data-day-toggle]')
+    if (dayToggle) {
+      const section = dayToggle.closest<HTMLElement>('.itinerary-day')
+      if (section) toggleDay(section)
+    }
+  })
+
+  resetButton?.addEventListener('click', () => {
+    if (!window.confirm('Hapus semua tanda selesai? Rencana tidak berubah.')) return
+    progress = {}
+    writeProgress(progress)
+    paintProgress()
+    paintNext()
+    announce('Tanda selesai direset.')
+  })
 
   printButton?.addEventListener('click', () => window.print())
 
@@ -170,6 +340,31 @@ function readMask(): string {
   } catch {
     return 'on'
   }
+}
+
+function collectKeys(itinerary: Itinerary): string[] {
+  const keys: string[] = []
+  for (const block of itinerary.blocks) {
+    for (const item of block.items) {
+      if (item.kind === 'entry' && !item.checkbox && item.time) {
+        keys.push(entryKey(block.title, item))
+      }
+    }
+  }
+  return keys
+}
+
+function shortDate(date: Date): string {
+  return date.toLocaleDateString('id-ID', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  })
+}
+
+function announce(message: string) {
+  const region = document.getElementById('pengumuman')
+  if (region) region.textContent = message
 }
 
 function formatRange(startValue?: string, endValue?: string): string {
