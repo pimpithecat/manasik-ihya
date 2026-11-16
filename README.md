@@ -33,7 +33,7 @@ npm run preview    # pratinjau hasil build (termasuk service worker)
 | `/panduan/` | Daftar tahap |
 | `/panduan/[slug]/` | Prosa tahap + doa berurutan + penanda selesai |
 | `/dua/` | Indeks 34 doa dengan pencarian Arab/Indonesia |
-| `/baca/` | Mode baca satu doa per layar (`?tahap=tawaf`, `#dua-...`) |
+| `/baca/` | Mode baca satu doa per layar (`?tahap=tawaf`, `#dua-...`), toggle terjemah, ukuran teks, wake lock |
 | `/manasik/` | Pintu masuk penghitung |
 | `/manasik/tawaf/` | Penghitung 7 putaran + doa per posisi |
 | `/manasik/sai/` | Penghitung 7 lap + arah Shafa–Marwah |
@@ -125,6 +125,7 @@ disimpan di `localStorage`:
 |---|---|
 | `theme-preference` | `light` / `dark` |
 | `manasik:text-size` | `kecil` / `sedang` / `besar` |
+| `manasik:translation` | `on` / `off` — tampilkan atau sembunyikan terjemah di mode baca |
 | `manasik:progress` | array slug tahap yang ditandai selesai |
 | `manasik:last` | slug tahap terakhir yang dibuka |
 | `manasik:tawaf`, `manasik:sai` | `{ round, stop, done }` |
@@ -140,6 +141,12 @@ Dua pengaturan penting di `astro.config.mjs`:
   cocok dengan format direktori Astro (`/baca/` ↔ `baca/index.html`).
 - `ignoreURLParametersMatching: [/^tahap$/]` — agar `/baca/?tahap=tawaf` tetap
   dilayani dari cache, bukan jatuh ke halaman offline.
+- `globIgnores: ['icons/**', '404.html']` — `404.html` **tidak** boleh masuk
+  precache. Build memetakannya menjadi `/404`, dan nginx mengembalikan status 404
+  untuk alamat itu; satu respons gagal membatalkan seluruh instalasi service worker.
+
+Footer menampilkan tombol “Pasang aplikasi” saat peramban mengirim
+`beforeinstallprompt`, dan petunjuk “Bagikan → Tambah ke Layar Utama” di iOS.
 
 Ikon PWA dibuat dari `public/icons/icon.svg` dan `maskable.svg`:
 

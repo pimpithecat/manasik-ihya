@@ -38,7 +38,7 @@ const jsonLdItems = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : []
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
@@ -113,6 +113,10 @@ const jsonLdItems = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : []
           var size = localStorage.getItem('manasik:text-size')
           if (size === 'kecil' || size === 'besar') {
             document.documentElement.dataset.size = size
+          }
+          var translation = localStorage.getItem('manasik:translation')
+          if (translation === 'off') {
+            document.documentElement.dataset.translation = 'off'
           }
         } catch (e) {}
       })()

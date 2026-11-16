@@ -11,6 +11,13 @@ const year = new Date().getFullYear()
     <a href="/sumber/">Sumber</a>
   </nav>
 
+  <button class="site-footer__install" type="button" data-install hidden>
+    Pasang aplikasi
+  </button>
+  <span class="site-footer__ios" data-ios-install hidden>
+    Pasang di iPhone: tombol Bagikan → Tambah ke Layar Utama.
+  </span>
+
   <span class="offline-state" data-offline-state data-state="idle" title="Seluruh isi tersimpan setelah halaman dibuka sekali">
     <span class="offline-state__dot" aria-hidden="true"></span>
     <span data-offline-text>Menyiapkan offline</span>
@@ -42,4 +49,44 @@ const year = new Date().getFullYear()
   window.addEventListener('online', paint)
   window.addEventListener('offline', paint)
   navigator.serviceWorker?.addEventListener('controllerchange', paint)
+
+  // Pasang sebagai aplikasi (PWA).
+  interface InstallPromptEvent extends Event {
+    prompt: () => Promise<void>
+    userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
+  }
+
+  const installButton = document.querySelector<HTMLButtonElement>('[data-install]')
+  const iosHint = document.querySelector<HTMLElement>('[data-ios-install]')
+  let deferred: InstallPromptEvent | null = null
+
+  window.addEventListener('beforeinstallprompt', (event) => {
+    event.preventDefault()
+    deferred = event as InstallPromptEvent
+    if (installButton) installButton.hidden = false
+  })
+
+  installButton?.addEventListener('click', async () => {
+    if (!deferred) return
+    await deferred.prompt()
+    try {
+      await deferred.userChoice
+    } catch {}
+    deferred = null
+    installButton.hidden = true
+  })
+
+  window.addEventListener('appinstalled', () => {
+    if (installButton) installButton.hidden = true
+    if (iosHint) iosHint.hidden = true
+  })
+
+  const standalone =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    (navigator as Navigator & { standalone?: boolean }).standalone === true
+  const isIos =
+    /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+
+  if (!standalone && isIos && iosHint) iosHint.hidden = false
 </script>

@@ -33,10 +33,6 @@ const lengthFor = (arabic: string, translation: string) => {
       </a>
       <span class="reader__count" data-reader-count>1 / {duas.length}</span>
       <span class="reader__spacer" aria-hidden="true"></span>
-      <button class="wake-toggle" type="button" data-size-cycle title="Ukuran teks">Aa</button>
-      <button class="wake-toggle" type="button" data-wake aria-pressed="false" title="Layar tetap menyala">
-        Layar
-      </button>
       <button class="theme-toggle" data-theme-toggle type="button" aria-label="Ubah mode gelap" title="Ubah mode gelap">
         <svg
           class="icon-sun"
@@ -71,6 +67,36 @@ const lengthFor = (arabic: string, translation: string) => {
       <span data-reader-progress></span>
     </div>
 
+    <div class="reader__tools">
+      <button
+        class="reader-tool"
+        type="button"
+        data-translation-toggle
+        aria-pressed="true"
+        title="Sembunyikan terjemah"
+      >
+        Terjemah
+      </button>
+      <button
+        class="reader-tool"
+        type="button"
+        data-size-cycle
+        aria-label="Ukuran teks: sedang. Tekan untuk mengganti."
+        title="Ukuran teks: sedang"
+      >
+        Aa
+      </button>
+      <button
+        class="reader-tool"
+        type="button"
+        data-wake
+        aria-pressed="false"
+        title="Cegah layar tidur saat membaca"
+      >
+        Tetap menyala
+      </button>
+    </div>
+
     <div class="reader__body">
       {
         duas.map((dua, i) => (
@@ -90,7 +116,7 @@ const lengthFor = (arabic: string, translation: string) => {
     </div>
 
     <p class="reader__hint">
-      Geser ke samping untuk berpindah · gulir untuk terjemah · <kbd>Esc</kbd> keluar
+      Geser ke samping untuk berpindah<span data-hint-translation> · gulir untuk terjemah</span><span class="reader__hint-esc"> · <kbd>Esc</kbd> keluar</span>
     </p>
 
     <div class="reader__nav">

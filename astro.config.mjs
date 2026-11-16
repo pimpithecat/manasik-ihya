@@ -45,7 +45,7 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{html,js,css,woff2,svg,txt}'],
-        globIgnores: ['icons/**'],
+        globIgnores: ['icons/**', '404.html'],
         navigateFallback: '/offline',
         ignoreURLParametersMatching: [/^tahap$/],
         navigateFallbackDenylist: [/^\/icons\//, /^\/fonts\//],

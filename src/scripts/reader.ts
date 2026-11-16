@@ -178,6 +178,33 @@ if (root) {
 
   paintSize()
 
+  // Tampilkan atau sembunyikan terjemah; pilihan disimpan di peramban.
+  const translationButton = root.querySelector<HTMLButtonElement>('[data-translation-toggle]')
+  const TRANSLATION_KEY = 'manasik:translation'
+
+  function translationOn(): boolean {
+    return rootEl.dataset.translation !== 'off'
+  }
+
+  function paintTranslation() {
+    if (!translationButton) return
+    const on = translationOn()
+    translationButton.setAttribute('aria-pressed', String(on))
+    translationButton.title = on ? 'Sembunyikan terjemah' : 'Tampilkan terjemah'
+  }
+
+  translationButton?.addEventListener('click', () => {
+    const on = !translationOn()
+    if (on) delete rootEl.dataset.translation
+    else rootEl.dataset.translation = 'off'
+    try {
+      localStorage.setItem(TRANSLATION_KEY, on ? 'on' : 'off')
+    } catch {}
+    paintTranslation()
+  })
+
+  paintTranslation()
+
   // Layar tetap menyala selama membaca.
   let wake: WakeLockSentinel | null = null
   let wakeWanted = false
@@ -199,7 +226,6 @@ if (root) {
   function paintWake(on: boolean) {
     if (!wakeButton) return
     wakeButton.setAttribute('aria-pressed', String(on))
-    wakeButton.textContent = on ? 'Layar menyala' : 'Layar'
   }
 
   if (wakeButton && 'wakeLock' in navigator) {
