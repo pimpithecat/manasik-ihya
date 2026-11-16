@@ -100,9 +100,14 @@ html {
   background: var(--paper);
   color: var(--ink);
   scroll-behavior: smooth;
+  scrollbar-gutter: stable;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
   scroll-padding-top: 2rem;
+}
+
+html.reader-page {
+  scrollbar-gutter: auto;
 }
 
 body {
