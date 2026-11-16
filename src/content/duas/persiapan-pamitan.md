@@ -2,7 +2,6 @@
 stage: persiapan
 order: 2
 title: "Berpamitan"
-kind: dua
 source: [1]
 arabic: |
   أَسْتَوْدِعُ اللَّهَ دِينَكَ وَأَمَانَتَكَ وَخَوَاتِيمَ عَمَلِكَ

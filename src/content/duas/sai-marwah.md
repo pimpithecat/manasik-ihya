@@ -2,7 +2,6 @@
 stage: sai
 order: 3
 title: "Di Bukit Marwah"
-kind: dua
 position: marwah
 source: [14]
 arabic: |

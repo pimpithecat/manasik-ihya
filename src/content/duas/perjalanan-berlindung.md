@@ -2,7 +2,6 @@
 stage: perjalanan
 order: 5
 title: "Setelah singgah"
-kind: dua
 source: [4]
 arabic: |
   أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ الَّتِي لَا يُجَاوِزُهُنَّ بَرٌّ وَلَا فَاجِرٌ مِنْ شَرِّ مَا خَلَقَ

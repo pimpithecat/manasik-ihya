@@ -47,7 +47,7 @@ const REQUIRED_IDS = [
   'tawaf-mizab',
   'tawaf-syami',
   'tawaf-yamani',
-  'tawaf-ayat',
+  'tawaf-antara-yamani',
   'tawaf-kembali',
   'tawaf-multazam',
   'tawaf-zamzam',

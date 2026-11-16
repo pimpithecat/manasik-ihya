@@ -2,7 +2,6 @@
 stage: tawaf
 order: 1
 title: "Di Hajar Aswad"
-kind: dua
 position: hajar-aswad
 source: [11]
 arabic: |

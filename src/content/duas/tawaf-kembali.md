@@ -2,7 +2,6 @@
 stage: tawaf
 order: 8
 title: "Saat kembali menyentuh Hajar Aswad"
-kind: dua
 position: hajar-aswad-kembali
 source: [10]
 arabic: |

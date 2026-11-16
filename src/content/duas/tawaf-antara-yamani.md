@@ -2,7 +2,6 @@
 stage: tawaf
 order: 7
 title: "Antara Rukun Yamani dan Hajar Aswad"
-kind: ayat
 position: antara-yamani-aswad
 source: [10]
 arabic: |

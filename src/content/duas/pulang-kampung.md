@@ -2,7 +2,6 @@
 stage: kepulangan
 order: 2
 title: "Melindungi kampung halaman"
-kind: dua
 source: [18, 19]
 arabic: |
   اللَّهُمَّ اجْعَلْ لَنَا بِهَا قَرَارًا وَرِزْقًا حَسَنًا

@@ -2,7 +2,6 @@
 stage: sai
 order: 2
 title: "Antara Shafa dan Marwah"
-kind: dua
 position: jalan
 source: [14]
 arabic: |

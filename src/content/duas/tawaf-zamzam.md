@@ -2,7 +2,6 @@
 stage: tawaf
 order: 10
 title: "Minum air zamzam"
-kind: dua
 position: zamzam
 source: [7]
 arabic: |

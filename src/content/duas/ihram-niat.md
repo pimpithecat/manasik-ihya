@@ -2,7 +2,6 @@
 stage: ihram
 order: 1
 title: "Niat ihram"
-kind: dua
 source: [5, 6, 7]
 arabic: |
   نَوَيْتُ الْعُمْرَةَ وَأَحْرَمْتُ بِهَا لِلَّهِ تَعَالَى

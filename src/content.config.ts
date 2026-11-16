@@ -30,7 +30,6 @@ const duas = defineCollection({
     ]),
     order: z.number().int().positive(),
     title: z.string(),
-    kind: z.enum(['dua', 'ayat']).default('dua'),
     position: z.string().optional(),
     source: z.array(z.number().int().positive()).min(1),
     arabic: z.string().min(1),

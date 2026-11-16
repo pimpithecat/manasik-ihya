@@ -27,7 +27,7 @@ const parts = arabics.map((arabic, index) => ({
 <article class="dua" id={`dua-${dua.id}`} data-stage={dua.data.stage} data-dua={dua.id}>
   <div class="dua__top">
     <p class="dua__label">
-      <span class="dua__kind">{dua.data.kind === 'ayat' ? 'Ayat' : 'Doa'}</span>{' '}
+      <span class="dua__kind">Doa</span>{' '}
       <span class="dua__num">{String(dua.index).padStart(2, '0')}</span>
       {showStage && <span> · {dua.stageShort}</span>}
     </p>

@@ -2,7 +2,6 @@
 stage: tawaf
 order: 3
 title: "Di Rukun Iraqi"
-kind: dua
 position: rukun-iraqi
 source: [11]
 arabic: |

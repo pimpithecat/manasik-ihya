@@ -2,7 +2,6 @@
 stage: makkah
 order: 2
 title: "Masuk Masjidil Haram"
-kind: dua
 source: [9]
 arabic: |
   بِسْمِ اللَّهِ وَبِاللَّهِ وَمِنَ اللَّهِ وَإِلَى اللَّهِ وَفِي سَبِيلِ اللَّهِ وَعَلَى مِلَّةِ رَسُولِ اللَّهِ ﷺ

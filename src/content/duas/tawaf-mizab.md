@@ -2,7 +2,6 @@
 stage: tawaf
 order: 4
 title: "Di bawah Mizab"
-kind: dua
 position: mizab
 source: [10]
 arabic: |

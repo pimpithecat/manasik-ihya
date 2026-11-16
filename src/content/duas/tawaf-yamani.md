@@ -2,7 +2,6 @@
 stage: tawaf
 order: 6
 title: "Di Rukun Yamani"
-kind: dua
 position: rukun-yamani
 source: [10]
 arabic: |

@@ -20,7 +20,7 @@ Talbiyah dihentikan ketika tawaf dimulai.
 4. **Di bawah Mizab**, talang emas di atap Ka'bah.
 5. **Rukun Syami** — sudut di sisi Syam.
 6. **Rukun Yamani** — sudut di sisi Yaman.
-7. **Antara Rukun Yamani dan Hajar Aswad** — membaca ayat *Rabbana atina*.
+7. **Antara Rukun Yamani dan Hajar Aswad** — membaca *Rabbana atina* (QS. Al-Baqarah: 201).
 
 Doa-doa tersebut dibaca berulang pada setiap putaran. Tidak ada kewajiban menghafal semuanya; yang penting menjaga dzikir dan tidak menjadikan tawaf sebagai lomba menghitung.
 

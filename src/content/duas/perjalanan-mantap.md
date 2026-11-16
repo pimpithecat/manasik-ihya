@@ -2,7 +2,6 @@
 stage: perjalanan
 order: 2
 title: "Setelah mantap di atas kendaraan"
-kind: dua
 source: [4]
 arabic: |
   سُبْحَانَ اللَّهِ وَالْحَمْدُ لِلَّهِ وَلَا إِلَهَ إِلَّا اللَّهُ وَاللَّهُ أَكْبَرُ

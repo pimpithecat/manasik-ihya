@@ -2,7 +2,6 @@
 stage: tawaf
 order: 5
 title: "Di Rukun Syami"
-kind: dua
 position: rukun-syami
 source: [10]
 arabic: |

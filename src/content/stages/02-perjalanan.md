@@ -10,7 +10,7 @@ Kendaraan adalah tempat pertama seseorang benar-benar menjadi musafir. Al-Ghazal
 
 ## Menaiki kendaraan
 
-Doa dinaikkan sebelum kendaraan bergerak. Setelah duduk mantap, bacalah tasbih, tahmid, tahlil, dan takbir masing-masing tujuh kali, lalu ayat Al-A'raf 43, kemudian doa *Allahumma antal hamil*.
+Doa dinaikkan sebelum kendaraan bergerak. Setelah duduk mantap, bacalah tasbih, tahmid, tahlil, dan takbir masing-masing tujuh kali, lalu QS. Al-A'raf: 43, kemudian doa *Allahumma antal hamil*.
 
 ## Di tengah jalan
 

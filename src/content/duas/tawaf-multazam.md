@@ -2,7 +2,6 @@
 stage: tawaf
 order: 9
 title: "Di Multazam"
-kind: dua
 position: multazam
 source: [12]
 arabic: |

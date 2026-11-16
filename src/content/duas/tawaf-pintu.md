@@ -2,7 +2,6 @@
 stage: tawaf
 order: 2
 title: "Di depan pintu Ka’bah"
-kind: dua
 position: maqam-ibrahim
 source: [11]
 arabic: |

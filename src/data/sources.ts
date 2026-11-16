@@ -65,7 +65,7 @@ export const tawafStops = [
   { key: 'mizab', label: 'Di bawah Mizab', dua: 'tawaf-mizab' },
   { key: 'rukun-syami', label: 'Rukun Syami', dua: 'tawaf-syami' },
   { key: 'rukun-yamani', label: 'Rukun Yamani', dua: 'tawaf-yamani' },
-  { key: 'antara-yamani-aswad', label: 'Antara Yamani dan Hajar Aswad', dua: 'tawaf-ayat' },
+  { key: 'antara-yamani-aswad', label: 'Antara Yamani dan Hajar Aswad', dua: 'tawaf-antara-yamani' },
 ] as const
 
 export const tawafAfter = [

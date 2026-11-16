@@ -7,7 +7,6 @@ import { sources, sourceLabelLong } from '../data/sources'
 
 const duas = await getDuas()
 const totalDuas = duas.length
-const totalAyat = duas.filter((dua) => dua.data.kind === 'ayat').length
 ---
 
 <BaseLayout
@@ -21,7 +20,7 @@ const totalAyat = duas.filter((dua) => dua.data.kind === 'ayat').length
   <div class="container container--reading">
     <header class="page-head">
       <Breadcrumb items={[{ name: 'Beranda', href: '/' }, { name: 'Sumber' }]} />
-      <p class="label">{totalDuas} doa · {totalAyat} ayat · 19 rujukan</p>
+      <p class="label">{totalDuas} doa · 19 rujukan</p>
       <h1 class="page-title">Sumber dan catatan</h1>
       <p class="page-desc">
         Satu kitab, satu urutan. Semua doa dalam panduan ini dirujuk ke jilid dan halaman, dan setiap

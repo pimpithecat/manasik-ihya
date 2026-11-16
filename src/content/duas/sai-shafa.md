@@ -2,7 +2,6 @@
 stage: sai
 order: 1
 title: "Di Bukit Shafa"
-kind: dua
 position: shafa
 source: [13]
 arabic: |

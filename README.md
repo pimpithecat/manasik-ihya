@@ -93,7 +93,6 @@ Buat `src/content/duas/<id>.md`:
 stage: tawaf                 # salah satu slug tahap
 order: 3                     # urutan dalam tahap
 title: Di Rukun Iraqi
-kind: dua                    # atau ayat
 position: rukun-iraqi        # opsional; dipakai penghitung
 source: [11]
 arabic: |
@@ -112,7 +111,7 @@ Lalu `npm run validate`. Bila doa dipakai penghitung, tambahkan id-nya ke
 Nomor `source` merujuk `src/data/sources.ts` (1–19). Nomor tampilan doa
 (`DOA 18`) dihitung otomatis: urutan tahap lalu urutan doa.
 
-Bila satu doa terdiri dari beberapa bagian (misalnya dzikir, lalu ayat, lalu doa),
+Bila satu doa terdiri dari beberapa bagian (misalnya dzikir, lalu petikan Al-Qur'an, lalu doa),
 pisahkan `arabic` dan `translation` dengan satu baris kosong. Jumlah paragraf
 keduanya harus sama; setiap pasangan ditampilkan berurutan: Arab, terjemah, Arab,
 terjemah. `npm run validate` menolak build bila jumlahnya tidak cocok.
