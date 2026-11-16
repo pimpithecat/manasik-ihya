@@ -23,6 +23,7 @@ const lengthFor = (arabic: string, translation: string) => {
   description="Baca doa umrah satu per satu dengan teks besar, tanpa gangguan."
   noindex
   bare
+  bodyClass="reader-page"
 >
   <div class="reader" data-reader>
     <h1 class="sr-only">Mode baca</h1>
@@ -33,52 +34,28 @@ const lengthFor = (arabic: string, translation: string) => {
       </a>
       <span class="reader__count" data-reader-count>1 / {duas.length}</span>
       <span class="reader__spacer" aria-hidden="true"></span>
-      <button class="theme-toggle" data-theme-toggle type="button" aria-label="Ubah mode gelap" title="Ubah mode gelap">
-        <svg
-          class="icon-sun"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.5"
-          aria-hidden="true"
-        >
-          <circle cx="12" cy="12" r="4"></circle>
-          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
-          ></path>
-        </svg>
-        <svg
-          class="icon-moon"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.5"
-          aria-hidden="true"
-        >
-          <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11Z"></path>
-        </svg>
-      </button>
-    </div>
 
-    <div class="reader__progress" aria-hidden="true">
-      <span data-reader-progress></span>
-    </div>
-
-    <div class="reader__tools">
       <button
-        class="reader-tool"
+        class="reader-icon"
         type="button"
         data-translation-toggle
         aria-pressed="true"
+        aria-label="Sembunyikan terjemah"
         title="Sembunyikan terjemah"
       >
-        Terjemah
+        <svg class="icon-on" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+          <text x="1.5" y="17" font-family="'Alegreya Sans', sans-serif" font-size="13" fill="currentColor">A</text>
+          <text x="10.5" y="17.5" font-family="'Amiri', 'Noto Naskh Arabic', serif" font-size="14" fill="currentColor">ع</text>
+        </svg>
+        <svg class="icon-off" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+          <text x="1.5" y="17" font-family="'Alegreya Sans', sans-serif" font-size="13" fill="currentColor">A</text>
+          <text x="10.5" y="17.5" font-family="'Amiri', 'Noto Naskh Arabic', serif" font-size="14" fill="currentColor">ع</text>
+          <path d="M3 3l18 18" fill="none" stroke="currentColor" stroke-width="1.5"></path>
+        </svg>
       </button>
+
       <button
-        class="reader-tool"
+        class="reader-icon reader-icon--size"
         type="button"
         data-size-cycle
         aria-label="Ukuran teks: sedang. Tekan untuk mengganti."
@@ -86,15 +63,35 @@ const lengthFor = (arabic: string, translation: string) => {
       >
         Aa
       </button>
+
       <button
-        class="reader-tool"
+        class="reader-icon"
         type="button"
         data-wake
         aria-pressed="false"
+        aria-label="Layar tetap menyala"
         title="Cegah layar tidur saat membaca"
       >
-        Tetap menyala
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+          <path d="M5 9h11v5.5a4.5 4.5 0 0 1-4.5 4.5h-2A4.5 4.5 0 0 1 5 14.5V9Z"></path>
+          <path d="M16 10h1.3a2.5 2.5 0 0 1 0 5H16"></path>
+          <path d="M8.2 5.5c0-1 .8-1 .8-2M11.6 5.5c0-1 .8-1 .8-2M15 5.5c0-1 .8-1 .8-2"></path>
+        </svg>
       </button>
+
+      <button class="theme-toggle" data-theme-toggle type="button" aria-label="Ubah mode gelap" title="Ubah mode gelap">
+        <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+        </svg>
+        <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11Z"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="reader__progress" aria-hidden="true">
+      <span data-reader-progress></span>
     </div>
 
     <div class="reader__body">

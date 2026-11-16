@@ -34,7 +34,7 @@ lalu penghitung tawaf:
 
 [![Demo Manasik Ihya'](docs/demo/manasik-ihya.gif)](docs/demo/manasik-ihya.mp4)
 
-[Unduh video MP4](docs/demo/manasik-ihya.mp4) · 20 detik · 736 KB.
+[Unduh video MP4](docs/demo/manasik-ihya.mp4) · 20 detik · 770 KB.
 
 ## Skrip
 

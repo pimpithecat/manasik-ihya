@@ -6,6 +6,7 @@ if (root) {
   const count = root.querySelector<HTMLElement>('[data-reader-count]')
   const stageLabel = root.querySelector<HTMLElement>('[data-reader-stage]')
   const progress = root.querySelector<HTMLElement>('[data-reader-progress]')
+  const body = root.querySelector<HTMLElement>('.reader__body')
   const prev = root.querySelector<HTMLButtonElement>('[data-reader-prev]')
   const next = root.querySelector<HTMLButtonElement>('[data-reader-next]')
   const sizeButton = root.querySelector<HTMLButtonElement>('[data-size-cycle]')
@@ -59,7 +60,7 @@ if (root) {
       history.replaceState(null, '', `${location.pathname}${location.search}#dua-${id}`)
     }
 
-    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior })
+    if (body) body.scrollTop = 0
   }
 
   function go(delta: number) {
@@ -191,6 +192,10 @@ if (root) {
     const on = translationOn()
     translationButton.setAttribute('aria-pressed', String(on))
     translationButton.title = on ? 'Sembunyikan terjemah' : 'Tampilkan terjemah'
+    translationButton.setAttribute(
+      'aria-label',
+      on ? 'Sembunyikan terjemah' : 'Tampilkan terjemah'
+    )
   }
 
   translationButton?.addEventListener('click', () => {
@@ -226,6 +231,10 @@ if (root) {
   function paintWake(on: boolean) {
     if (!wakeButton) return
     wakeButton.setAttribute('aria-pressed', String(on))
+    wakeButton.setAttribute(
+      'aria-label',
+      on ? 'Matikan layar tetap menyala' : 'Layar tetap menyala'
+    )
   }
 
   if (wakeButton && 'wakeLock' in navigator) {
