@@ -15,6 +15,27 @@ npm run preview    # pratinjau hasil build (termasuk service worker)
 > `npx astro dev status`, `npx astro dev logs`, `npx astro dev stop`
 > (sama untuk `astro preview`).
 
+## Tangkapan layar
+
+| Beranda | Mode gelap |
+|---|---|
+| [![Beranda](docs/screenshots/beranda-desktop.webp)](docs/screenshots/beranda-desktop.webp) | [![Beranda mode gelap](docs/screenshots/beranda-gelap-desktop.webp)](docs/screenshots/beranda-gelap-desktop.webp) |
+
+| Tahap tawaf — doa dan bacaan | Indeks doa |
+|---|---|
+| [![Tahap tawaf](docs/screenshots/tahap-tawaf-desktop.webp)](docs/screenshots/tahap-tawaf-desktop.webp) | [![Indeks doa](docs/screenshots/dua-desktop.webp)](docs/screenshots/dua-desktop.webp) |
+
+| Mobile: beranda | Mode baca | Penghitung tawaf |
+|---|---|---|
+| [![Beranda mobile](docs/screenshots/beranda-mobile.webp)](docs/screenshots/beranda-mobile.webp) | [![Mode baca](docs/screenshots/baca-mobile.webp)](docs/screenshots/baca-mobile.webp) | [![Penghitung tawaf](docs/screenshots/manasik-mobile.webp)](docs/screenshots/manasik-mobile.webp) |
+
+Demo singkat — beranda, tahap tawaf, mode baca (termasuk sembunyikan terjemah),
+lalu penghitung tawaf:
+
+[![Demo Manasik Ihya'](docs/demo/manasik-ihya.gif)](docs/demo/manasik-ihya.mp4)
+
+[Unduh video MP4](docs/demo/manasik-ihya.mp4) · 20 detik · 736 KB.
+
 ## Skrip
 
 | Perintah | Isi |
