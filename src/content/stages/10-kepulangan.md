@@ -1,5 +1,5 @@
 ---
-order: 9
+order: 10
 title: "Kepulangan hingga masuk rumah"
 short: "Pulang"
 place: "Perjalanan pulang"

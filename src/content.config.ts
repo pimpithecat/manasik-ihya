@@ -5,7 +5,7 @@ import { glob } from 'astro/loaders'
 const stages = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/stages' }),
   schema: z.object({
-    order: z.number().int().min(1).max(9),
+    order: z.number().int().min(1).max(10),
     title: z.string(),
     short: z.string(),
     place: z.string(),
@@ -20,6 +20,7 @@ const duas = defineCollection({
     stage: z.enum([
       'persiapan',
       'perjalanan',
+      'ziarah',
       'ihram',
       'makkah',
       'tawaf',

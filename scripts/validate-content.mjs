@@ -15,6 +15,7 @@ const stagesDir = path.join(root, 'src/content/stages')
 const STAGES = [
   'persiapan',
   'perjalanan',
+  'ziarah',
   'ihram',
   'makkah',
   'tawaf',
@@ -128,7 +129,7 @@ for (const file of files) {
     problems.push(`${id}: source harus [1] atau [1, 2]`)
   } else {
     for (const number of source.slice(1, -1).split(',').map((value) => Number(value.trim()))) {
-      if (number < 1 || number > 19) problems.push(`${id}: rujukan di luar 1-19 (${number})`)
+      if (number < 1 || number > 24) problems.push(`${id}: rujukan di luar 1-24 (${number})`)
     }
   }
 
@@ -139,7 +140,7 @@ for (const file of files) {
 }
 
 const stages = (await readdir(stagesDir)).filter((file) => file.endsWith('.md'))
-if (stages.length !== STAGES.length) problems.push(`jumlah tahap ${stages.length}, seharusnya 9`)
+if (stages.length !== STAGES.length) problems.push(`jumlah tahap ${stages.length}, seharusnya 10`)
 
 for (const stage of STAGES) {
   if (!byStage[stage]) problems.push(`tahap tanpa doa: ${stage}`)

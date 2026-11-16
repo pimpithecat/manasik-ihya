@@ -1,5 +1,5 @@
 ---
-order: 8
+order: 9
 title: "Tawaf Wada'"
 short: "Wada'"
 place: "Mataf"

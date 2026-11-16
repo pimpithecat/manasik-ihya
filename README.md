@@ -1,6 +1,6 @@
 # Manasik Ihya'
 
-Bacaan umrah dari _Ihya' 'Ulum al-Din_ — sembilan tahap, 34 doa, satu sumber.
+Bacaan umrah dari _Ihya' 'Ulum al-Din_ — sepuluh tahap, 40 doa, satu sumber.
 Situs statis, tanpa akun, tanpa basis data, dan tetap terbaca tanpa jaringan setelah
 kunjungan pertama.
 
@@ -43,17 +43,17 @@ lalu penghitung tawaf:
 | `npm run dev` | Server pengembangan |
 | `npm run build` | Menjalankan `validate` lalu membangun situs statis |
 | `npm run preview` | Menyajikan `dist/` beserta service worker |
-| `npm run validate` | Memeriksa 34 doa, 9 tahap, rujukan 1–19, dan posisi manasik |
+| `npm run validate` | Memeriksa 40 doa, 10 tahap, rujukan 1–24, dan posisi manasik |
 | `npm run check` | Pemeriksaan tipe Astro/TypeScript |
 
 ## Peta halaman
 
 | Rute | Isi |
 |---|---|
-| `/` | Beranda: alur 9 tahap, pintu masuk cepat, "Lanjutkan" |
+| `/` | Beranda: alur 10 tahap, pintu masuk cepat, "Lanjutkan" |
 | `/panduan/` | Daftar tahap |
 | `/panduan/[slug]/` | Prosa tahap + doa berurutan + penanda selesai |
-| `/dua/` | Indeks 34 doa dengan pencarian Arab/Indonesia |
+| `/dua/` | Indeks 40 doa dengan pencarian Arab/Indonesia |
 | `/baca/` | Mode baca satu doa per layar (`?tahap=tawaf`, `#dua-...`), toggle terjemah, ukuran teks, wake lock |
 | `/itinerary/` | Itinerary pribadi: timeline hari, checklist, kode tersamarkan |
 | `/itinerary/edit/` | Editor markdown itinerary, impor/ekspor, template, cadangan |
@@ -62,7 +62,7 @@ lalu penghitung tawaf:
 | `/manasik/sai/` | Penghitung 7 lap + arah Shafa–Marwah |
 | `/cetak/` | Buku lengkap untuk dicetak / disimpan PDF |
 | `/cetak/[slug]/` | Lembar cetak per tahap |
-| `/sumber/` | Kitab, catatan editorial, 19 rujukan |
+| `/sumber/` | Kitab, catatan editorial, 24 rujukan |
 | `/offline/` | Fallback saat halaman belum tersimpan |
 | `/404` | Halaman tidak ditemukan (juga `dist/404.html`) |
 
@@ -71,9 +71,9 @@ lalu penghitung tawaf:
 ```
 src/
 ├─ content.config.ts        skema koleksi (zod)
-├─ content/stages/*.md      prosa 9 tahap
-├─ content/duas/*.md        34 doa (frontmatter: arabic, translation, source, position)
-├─ data/sources.ts          19 rujukan + posisi tawaf/sa'i
+├─ content/stages/*.md      prosa 10 tahap
+├─ content/duas/*.md        40 doa (frontmatter: arabic, translation, source, position)
+├─ data/sources.ts          24 rujukan + posisi tawaf/sa'i
 ├─ lib/itinerary.ts         parser markdown itinerary, hari, waktu, tag, artefak
 ├─ lib/itinerary-progress.ts hash + simpan tanda selesai kegiatan
 ├─ scripts/itinerary-*.ts   render timeline, halaman baca, editor

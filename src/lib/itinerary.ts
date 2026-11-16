@@ -40,6 +40,7 @@ export interface Itinerary {
 export const STAGE_LINKS: Record<string, string> = {
   persiapan: '/panduan/persiapan/',
   perjalanan: '/panduan/perjalanan/',
+  ziarah: '/panduan/ziarah/',
   ihram: '/panduan/ihram/',
   makkah: '/panduan/makkah/',
   tawaf: '/panduan/tawaf/',

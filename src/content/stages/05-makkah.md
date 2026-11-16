@@ -1,5 +1,5 @@
 ---
-order: 4
+order: 5
 title: "Memasuki Makkah dan Masjidil Haram"
 short: "Makkah"
 place: "Makkah"

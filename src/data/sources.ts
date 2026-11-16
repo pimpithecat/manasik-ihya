@@ -43,6 +43,11 @@ export const sources: SourceRef[] = [
   { n: 17, work: IHYA, workShort: IHYA_SHORT, vol: 1, page: 258 },
   { n: 18, work: IHYA, workShort: IHYA_SHORT, vol: 1, page: 261 },
   { n: 19, work: IHYA, workShort: IHYA_SHORT, vol: 2, page: 256 },
+  { n: 20, work: IHYA, workShort: IHYA_SHORT, vol: 1, page: 259, note: 'Masuk Madinah, salam kepada Nabi ﷺ dan dua sahabatnya.' },
+  { n: 21, work: IHYA, workShort: IHYA_SHORT, vol: 1, page: 260, note: 'Rawda, Baqi\', Uhud, dan Quba.' },
+  { n: 22, work: IHYA, workShort: IHYA_SHORT, vol: 4, page: 491, note: 'Adab ziarah kubur dan doanya.' },
+  { n: 23, work: IHYA, workShort: IHYA_SHORT, vol: 1, page: 122, note: 'Salam Nabi ﷺ saat memasuki pemakaman, pada bahasan insya Allah.' },
+  { n: 24, work: IHYA, workShort: IHYA_SHORT, vol: 1, page: 204, note: 'Salam saat iringan jenazah sampai di pemakaman.' },
 ]
 
 export const sourceByNumber = new Map(sources.map((source) => [source.n, source]))
