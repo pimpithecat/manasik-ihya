@@ -128,7 +128,26 @@ function init(root: HTMLElement) {
     if (resetButton) resetButton.hidden = stats.done === 0
   }
 
-  /** Tandai kegiatan pertama yang belum selesai pada hari ini sebagai “Berikutnya”. */
+  /**
+   * Cakupan pencarian posisi: hari ini, hari terakhir setelah perjalanan,
+   * atau seluruh rencana (sebelum mulai / tanpa tanggal).
+   */
+  function focusDay(): HTMLElement | null {
+    if (!body) return null
+    const todaySection = body.querySelector<HTMLElement>('[data-today]')
+    if (todaySection) return todaySection
+
+    const days = Array.from(body.querySelectorAll<HTMLElement>('.itinerary-day'))
+    if (!days.length) return null
+
+    const end = data.meta.selesai ? parseDate(data.meta.selesai) : null
+    const now = new Date()
+    const day = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    if (end && day > end) return days[days.length - 1]
+    return null
+  }
+
+  /** Tandai kegiatan pertama yang belum selesai sebagai “Berikutnya”. */
   function paintNext() {
     if (!body) return
     body.querySelectorAll('.itinerary-next').forEach((element) => element.remove())
@@ -137,17 +156,17 @@ function init(root: HTMLElement) {
       delete element.dataset.complete
     })
 
-    const section = body.querySelector<HTMLElement>('[data-today]')
-    if (!section) {
-      if (todayLink) todayLink.hidden = true
-      return
-    }
+    const section = focusDay()
+    const scope = section ?? body
+    const rows = Array.from(scope.querySelectorAll<HTMLElement>('[data-progress-entry]'))
 
-    const rows = Array.from(section.querySelectorAll<HTMLElement>('[data-progress-entry]'))
     if (!rows.length) {
-      if (todayLink) {
+      if (section && todayLink) {
         todayLink.href = `#${section.id}`
         todayLink.hidden = false
+        todayLink.textContent = section.dataset.today ? 'Hari ini ↓' : 'Hari terakhir ↓'
+      } else if (todayLink) {
+        todayLink.hidden = true
       }
       return
     }
@@ -169,6 +188,11 @@ function init(root: HTMLElement) {
       return
     }
 
+    if (!section) {
+      if (todayLink) todayLink.hidden = true
+      return
+    }
+
     section.dataset.complete = 'true'
     const label = document.createElement('span')
     label.className = 'itinerary-next itinerary-next--day'
@@ -177,7 +201,7 @@ function init(root: HTMLElement) {
     if (todayLink) {
       todayLink.href = `#${section.id}`
       todayLink.hidden = false
-      todayLink.textContent = 'Hari ini ↓'
+      todayLink.textContent = section.dataset.today ? 'Hari ini ↓' : 'Hari terakhir ↓'
     }
   }
 

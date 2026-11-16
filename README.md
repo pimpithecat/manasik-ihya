@@ -233,9 +233,11 @@ zona: WITA · WIB · AST
 - Saat halaman dibuka, itinerary otomatis menggulir ke kegiatan pertama yang
   belum selesai pada hari ini, dengan label **Berikutnya**. Bila semua kegiatan
   hari ini selesai, halaman berhenti di judul hari dan menampilkan **Selesai**.
-  Auto-scroll dilewati bila URL punya hash, dan tidak dilakukan bila hari ini di
-  luar rentang `mulai`/`selesai`. Karena berbasis progres — bukan jam dinding —
-  perilakunya tetap benar untuk rencana lintas zona WITA/WIB/AST.
+  Auto-scroll dilewati bila URL punya hash.
+- Di luar rentang tanggal, auto-jump tetap bekerja: sebelum `mulai` atau tanpa
+  tanggal menuju kegiatan belum selesai pertama di seluruh rencana, sedangkan
+  setelah `selesai` menuju hari terakhir. Karena berbasis progres — bukan jam
+  dinding — perilakunya tetap benar untuk rencana lintas zona WITA/WIB/AST.
 - Rail hari bersifat sticky (latar `--paper`, garis 1px, tanpa shadow) agar nomor
   hari, ringkasan progres, dan tautan **Berikutnya** tetap terlihat.
 - `` `kode` `` disamarkan di halaman baca; ketuk untuk melihat, tombol
